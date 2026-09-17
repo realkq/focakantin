@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foça Kantin Başkanlığı MF Takip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16241f;
+    --ink-soft:#5b6b64;
+    --bg:#eef1ec;
+    --paper:#ffffff;
+    --line:#dde3da;
+    --pine:#1c3b34;
+    --pine-light:#2c5148;
+    --stamp:#c1622b;
+    --stamp-soft:#f3ddc9;
+    --brick:#a23b3b;
+    --brick-soft:#f3dbd8;
+    --ok:#2f6f52;
+    --ok-soft:#dcece0;
+    --radius:10px;
+    --radius-sm:7px;
+    --shadow-sm:0 1px 2px rgba(22,36,31,0.05);
+    --shadow-md:0 6px 20px rgba(22,36,31,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  #app{display:flex;min-height:100vh;}
+
+  /* Sidebar */
+  .sidebar{
+    width:224px;
+    flex-shrink:0;
+    background:var(--pine);
+    color:#eef1ec;
+    padding:26px 0;
+    display:flex;
+    flex-direction:column;
+  }
+  .brand{
+    padding:0 22px 20px 22px;
+    border-bottom:1px solid rgba(255,255,255,0.12);
+    margin-bottom:14px;
+  }
+  .brand-mark{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    letter-spacing:0.05em;
+    color:var(--stamp);
+    font-weight:600;
+  }
+  .brand-title{
+    font-size:18px;
+    font-weight:700;
+    margin-top:5px;
+    line-height:1.3;
+    letter-spacing:-0.01em;
+  }
+  .nav{display:flex;flex-direction:column;padding:0 12px;gap:2px;}
+  .nav button{
+    all:unset;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    border-radius:var(--radius-sm);
+    font-size:13.5px;
+    font-weight:500;
+    color:#c9d3cd;
+    transition:background .14s ease, color .14s ease;
+  }
+  .nav button .nav-ic{font-size:14px;width:16px;text-align:center;opacity:0.85;}
+  .nav button:hover{background:rgba(255,255,255,0.07);color:#fff;}
+  .nav button.active{background:var(--pine-light);color:#fff;}
+  .sidebar-foot{
+    margin-top:auto;
+    padding:16px 22px 0 22px;
+    font-size:11.5px;
+    color:#8aa199;
+    border-top:1px solid rgba(255,255,255,0.12);
+    line-height:1.7;
+  }
+  .cloud-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#5fbf8f;margin-right:6px;box-shadow:0 0 0 3px rgba(95,191,143,0.18);}
+  .cloud-dot.pending{background:#e0a95f;box-shadow:0 0 0 3px rgba(224,169,95,0.18);}
+
+  /* Main */
+  .main{flex:1;padding:36px 42px;max-width:1180px;}
+  .page-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;flex-wrap:wrap;gap:14px;}
+  .page-head h1{font-size:22px;margin:0;font-weight:700;letter-spacing:-0.01em;}
+  .page-head p{margin:5px 0 0 0;color:var(--ink-soft);font-size:13.5px;max-width:640px;line-height:1.5;}
+
+  .grid-2{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start;}
+  @media (max-width:900px){.grid-2{grid-template-columns:1fr;} .main{padding:24px 18px;} .sidebar{width:100%;}}
+
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px;
+    box-shadow:var(--shadow-sm);
+  }
+  .card h2{font-size:14.5px;margin:0 0 16px 0;font-weight:600;color:var(--ink);}
+
+  label{display:block;font-size:12.5px;color:var(--ink-soft);margin-bottom:6px;margin-top:14px;font-weight:500;}
+  label:first-of-type{margin-top:0;}
+  input,select{
+    width:100%;
+    padding:10px 11px;
+    border:1px solid var(--line);
+    border-radius:var(--radius-sm);
+    font-size:13.5px;
+    font-family:inherit;
+    background:#fbfbfa;
+    color:var(--ink);
+    transition:border-color .12s ease, box-shadow .12s ease;
+  }
+  input:focus,select:focus{outline:none;border-color:var(--pine-light);box-shadow:0 0 0 3px rgba(44,81,72,0.12);background:#fff;}
+
+  .btn{
+    all:unset;
+    box-sizing:border-box;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    padding:10px 17px;
+    border-radius:var(--radius-sm);
+    font-size:13.5px;
+    font-weight:600;
+    text-align:center;
+    transition:background .12s ease, transform .05s ease, opacity .12s ease;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--pine);color:#fff;}
+  .btn-primary:hover{background:var(--pine-light);}
+  .btn-ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line);}
+  .btn-ghost:hover{background:#f2f2ee;color:var(--ink);}
+  .btn-row{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{
+    text-align:left;
+    font-weight:600;
+    color:var(--ink-soft);
+    font-size:11px;
+    letter-spacing:0.01em;
+    padding:9px 10px;
+    border-bottom:1px solid var(--line);
+  }
+  td{padding:10px 10px;border-bottom:1px solid #eef0eb;vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
+  tbody tr{transition:background .1s ease;}
+  tbody tr:hover{background:#f8f9f6;}
+  .num{font-family:'IBM Plex Mono',monospace;font-size:12.5px;text-align:right;}
+  .row-actions{display:flex;gap:4px;justify-content:flex-end;}
+  .icon-btn{
+    all:unset;cursor:pointer;font-size:12px;color:var(--ink-soft);padding:4px 9px;border-radius:6px;transition:background .1s ease,color .1s ease;
+  }
+  .icon-btn:hover{background:#eef1ec;color:var(--ink);}
+  .icon-btn.danger:hover{background:var(--brick-soft);color:var(--brick);}
+
+  .badge{
+    display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .badge-ok{background:var(--ok-soft);color:var(--ok);}
+  .badge-deficit{background:var(--brick-soft);color:var(--brick);}
+  .badge-surplus{background:var(--stamp-soft);color:var(--stamp);}
+
+  .empty{color:var(--ink-soft);font-size:13px;padding:26px 6px;text-align:center;}
+
+  .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:10px;flex-wrap:wrap;}
+  .toolbar select{width:auto;min-width:180px;}
+
+  .summary-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+  @media (max-width:760px){.summary-row{grid-template-columns:repeat(2,1fr);}}
+  .stat{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:17px 18px;box-shadow:var(--shadow-sm);}
+  .stat .label{font-size:11.5px;color:var(--ink-soft);font-weight:500;}
+  .stat .value{font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;margin-top:7px;}
+  .stat.accent .value{color:var(--stamp);}
+  .stat.deficit .value{color:var(--brick);}
+
+  .section-title{font-size:13px;font-weight:600;color:var(--ink-soft);margin:28px 0 10px 0;}
+  .section-title:first-child{margin-top:0;}
+  .section-title-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin:28px 0 10px 0;}
+  .section-title-row .section-title{margin:0;}
+  .toggle-check{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-soft);font-weight:500;margin:0;cursor:pointer;}
+  .toggle-check input[type="checkbox"]{width:auto;margin:0;cursor:pointer;}
+
+  /* Rapor: üstte belirgin dönem filtre çubuğu */
+  .report-filter-bar{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    background:var(--pine);
+    color:#eef1ec;
+    padding:14px 18px;
+    border-radius:var(--radius);
+    margin-bottom:22px;
+    box-shadow:var(--shadow-md);
+  }
+  .report-filter-bar .field{display:flex;align-items:center;gap:8px;}
+  .report-filter-bar label{margin:0;font-size:12px;font-weight:600;color:#c9d3cd;white-space:nowrap;}
+  .report-filter-bar select{width:auto;background:#fff;color:var(--ink);}
+  .report-filter-bar select.month-select{
+    min-width:190px;
+    font-size:14.5px;
+    font-weight:700;
+    border:2px solid var(--stamp);
+    color:var(--pine);
+    padding:9px 10px;
+  }
+  .report-filter-bar .btn-ghost-inv{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.28);margin-left:auto;}
+  .report-filter-bar .btn-ghost-inv:hover{background:rgba(255,255,255,0.18);}
+  @media (max-width:760px){.report-filter-bar .btn-ghost-inv{margin-left:0;}}
+  .save-indicator{display:flex;align-items:center;gap:6px;font-size:11.5px;color:#a9d9c1;font-family:'IBM Plex Mono',monospace;min-width:0;}
+
+  /* Belirgin satır/sütun çizgili tablo */
+  table.table-grid{border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden;}
+  table.table-grid th, table.table-grid td{border:1px solid var(--line);}
+  table.table-grid thead th{background:#e7ebe4;}
+  table.table-grid tbody tr:nth-child(even){background:#f5f7f3;}
+  table.table-grid tbody tr:hover{background:var(--stamp-soft);}
+
+  .hint{font-size:12px;color:var(--ink-soft);margin-top:10px;line-height:1.55;}
+
+  .print-only{display:none;}
+  @media print{
+    .no-print{display:none !important;}
+    .print-only{display:block !important;}
+    body{background:#fff;}
+    #app{display:block;}
+    .main{padding:0;max-width:100%;}
+    .card{border:1px solid #999;padding:12px;break-inside:avoid;}
+    .summary-row{grid-template-columns:repeat(4,1fr);}
+    table{font-size:11px;}
+    th,td{padding:5px 6px;}
+    .section-title{margin:14px 0 8px 0;}
+    tr{break-inside:avoid;}
+    @page{size:A4;margin:14mm 12mm;}
+  }
+
+  /* Toast: otomatik kayıt bildirimi */
+  #toast{
+    position:fixed;bottom:22px;right:22px;z-index:50;
+    background:var(--pine);color:#eef1ec;
+    padding:10px 16px;border-radius:var(--radius-sm);
+    font-size:12.5px;font-weight:500;
+    box-shadow:var(--shadow-md);
+    display:flex;align-items:center;gap:8px;
+    opacity:0;transform:translateY(6px);
+    transition:opacity .18s ease, transform .18s ease;
+    pointer-events:none;
+  }
+  #toast.show{opacity:1;transform:translateY(0);}
+  #toast .dot{width:6px;height:6px;border-radius:50%;background:#5fbf8f;flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<!-- ================= GİRİŞ EKRANI ================= -->
+<div id="login-screen" style="display:flex;min-height:100vh;align-items:center;justify-content:center;background:#eef1ec;font-family:'Inter',system-ui,sans-serif;padding:20px;">
+  <div style="background:#fff;border:1px solid #dde3da;border-radius:14px;padding:34px 32px;max-width:360px;width:100%;box-shadow:0 10px 34px rgba(22,36,31,0.09);">
+    <div style="width:36px;height:36px;border-radius:9px;background:#1c3b34;display:flex;align-items:center;justify-content:center;color:#c1622b;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:15px;margin-bottom:16px;">MF</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;color:#c1622b;font-weight:600;">FOÇA KANTİN BAŞKANLIĞI</div>
+    <div style="font-size:19px;font-weight:700;margin:4px 0 22px 0;color:#16241f;letter-spacing:-0.01em;">MF Takip'e giriş yap</div>
+    <form id="login-form">
+      <label style="display:block;font-size:12.5px;color:#5b6b64;margin-bottom:6px;font-weight:500;">E-posta</label>
+      <input id="login-email" type="email" required style="width:100%;padding:10px 11px;border:1px solid #dde3da;border-radius:7px;font-size:13.5px;margin-bottom:14px;box-sizing:border-box;background:#fbfbfa;">
+      <label style="display:block;font-size:12.5px;color:#5b6b64;margin-bottom:6px;font-weight:500;">Şifre</label>
+      <input id="login-password" type="password" required style="width:100%;padding:10px 11px;border:1px solid #dde3da;border-radius:7px;font-size:13.5px;margin-bottom:18px;box-sizing:border-box;background:#fbfbfa;">
+      <button type="submit" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;text-align:center;background:#1c3b34;color:#fff;padding:11px;border-radius:7px;font-weight:600;font-size:13.5px;">Giriş yap</button>
+      <div id="login-error" style="color:#a23b3b;font-size:12.5px;margin-top:12px;"></div>
+    </form>
+    <p style="font-size:11.5px;color:#8aa199;margin-top:18px;line-height:1.6;">Hesabınız yoksa yöneticinizin Firebase konsolundan sizin için bir kullanıcı oluşturması gerekir.</p>
+  </div>
+</div>
+
+<div id="app" style="display:none;"></div>
+<div id="toast"><span class="dot"></span><span id="toast-text"></span></div>
+
+<!-- ================= FIREBASE (ücretsiz bulut veritabanı) ================= -->
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+<script>
+// AŞAĞIDAKİ 6 DEĞERİ Firebase Console > Proje Ayarları > Genel > "SDK kurulumu ve
+// yapılandırması" bölümünden alacağınız kendi bilgilerinizle değiştirin.
+const firebaseConfig = {
+  apiKey: "AIzaSyCRQ4z1_szpzQbQ5dBhSCXel-Od63MG36I",
+  authDomain: "kantinfoca-9c9ae.firebaseapp.com",
+  projectId: "kantinfoca-9c9ae",
+  storageBucket: "kantinfoca-9c9ae.firebasestorage.app",
+  messagingSenderId: "94835265945",
+  appId: "1:94835265945:web:37ee0071009aa69d27c308"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const DOC_REF = db.collection('mal-fazlasi').doc('veri'); // tüm veri tek dokümanda tutulur
+
+let cloudReady = false;
+let unsubscribeSnapshot = null;
+
+async function attachCloudSync(){
+  try{
+    const snap = await DOC_REF.get();
+    if(snap.exists){
+      data = Object.assign({companies:[],invoices:[],bonuses:[]}, snap.data());
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } else {
+      await DOC_REF.set(data); // ilk kurulum: mevcut yerel veriyi buluta yaz
+    }
+  }catch(e){ console.error('İlk bulut yükleme hatası', e); }
+  cloudReady = true;
+  render();
+  if(!unsubscribeSnapshot){
+    unsubscribeSnapshot = DOC_REF.onSnapshot(snap=>{
+      if(!snap.exists) return;
+      const remote = snap.data();
+      if(JSON.stringify(remote) !== JSON.stringify(data)){
+        data = Object.assign({companies:[],invoices:[],bonuses:[]}, remote);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        render();
+      }
+    }, err=>console.error('Bulut senkronizasyon hatası', err));
+  }
+}
+
+function detachCloudSync(){
+  cloudReady = false;
+  if(unsubscribeSnapshot){ unsubscribeSnapshot(); unsubscribeSnapshot = null; }
+}
+
+auth.onAuthStateChanged(user=>{
+  const loginScreen = document.getElementById('login-screen');
+  const appEl = document.getElementById('app');
+  if(user){
+    loginScreen.style.display = 'none';
+    appEl.style.display = 'flex';
+    attachCloudSync();
+  } else {
+    detachCloudSync();
+    loginScreen.style.display = 'flex';
+    appEl.style.display = 'none';
+  }
+});
+
+document.getElementById('login-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+  errEl.textContent = '';
+  auth.signInWithEmailAndPassword(email, password).catch(err=>{
+    errEl.textContent = 'Giriş başarısız: e-posta veya şifre hatalı.';
+    console.error(err);
+  });
+});
+</script>
+
+<script>
+let data = { companies: [], invoices: [], bonuses: [] };
+let ui = {
+  tab: 'rapor',
+  editCompanyId: null,
+  editInvoiceId: null,
+  editBonusId: null,
+  invoiceMonthFilter: 'all',
+  invoiceCompanyFilter: 'all',
+  bonusMonthFilter: 'all',
+  bonusCompanyFilter: 'all',
+  reportMonth: currentMonthKey(),
+  reportCompany: 'all',
+  showInvoiceDetail: false
+};
+
+const STORAGE_KEY = 'isletme-mal-fazlasi-v1';
+const AY_ADLARI = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      data = Object.assign({companies:[],invoices:[],bonuses:[]}, parsed);
+    }
+  }catch(e){ /* henüz kayıt yok, varsayılan boş veriyle devam */ }
+  render();
+}
+
+// Her ekleme / düzenleme / silme işleminden hemen sonra çağrılır.
+// Kullanıcının "kaydet" butonuna basmasına gerek yok: veriler önce tarayıcıya,
+// ardından buluttaki veritabanına (Firestore) otomatik yazılır.
+async function saveData(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }catch(e){ console.error('Kayıt hatası (tarayıcı)', e); }
+  if(cloudReady){
+    try{
+      await DOC_REF.set(data);
+      showToast('Kaydedildi');
+    }catch(e){
+      console.error('Bulut kayıt hatası', e);
+      showToast('Bulut kaydı başarısız, tekrar denenecek');
+    }
+  }
+}
+
+let toastTimer = null;
+function showToast(msg){
+  const el = document.getElementById('toast');
+  const textEl = document.getElementById('toast-text');
+  if(!el || !textEl) return;
+  textEl.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> el.classList.remove('show'), 1800);
+}
+
+function exportJson(){
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'mal-fazlasi-veri-' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function triggerImport(){
+  const input = document.getElementById('importFileInput');
+  if(input) input.click();
+}
+
+function handleImportFile(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const parsed = JSON.parse(reader.result);
+      if(confirm('Mevcut veriler, seçtiğiniz dosyadaki verilerle değiştirilecek. Devam edilsin mi?')){
+        data = Object.assign({companies:[],invoices:[],bonuses:[]}, parsed);
+        saveData();
+        render();
+        showToast('İçe aktarıldı');
+      }
+    }catch(err){ alert('Dosya okunamadı veya geçersiz format.'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function money(n){
+  return (Number(n)||0).toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' ₺';
+}
+function fmtDate(d){
+  if(!d) return '';
+  const [y,m,day] = d.split('-');
+  return day+'.'+m+'.'+y;
+}
+function monthKey(d){ return d ? d.slice(0,7) : ''; }
+function currentMonthKey(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+}
+function monthLabel(key){
+  if(key==='all') return 'Tüm zamanlar';
+  const [y,m] = key.split('-');
+  return AY_ADLARI[parseInt(m,10)-1] + ' ' + y;
+}
+function companyName(id){
+  const c = data.companies.find(c=>c.id===id);
+  return c ? c.name : '—';
+}
+function companyPercent(id){
+  const c = data.companies.find(c=>c.id===id);
+  return c ? c.percent : 0;
+}
+function availableMonths(list){
+  const set = new Set(list.map(x=>monthKey(x.date)).filter(Boolean));
+  return Array.from(set).sort().reverse();
+}
+function bonusPeriod(b){
+  // Eski kayıtlarda "period" alanı olmayabilir; bu durumda teslim tarihinin ayına düş.
+  return b.period || monthKey(b.date);
+}
+function availableBonusPeriods(){
+  const set = new Set(data.bonuses.map(b=>bonusPeriod(b)).filter(Boolean));
+  return Array.from(set).sort().reverse();
+}
+function companyFilterOptions(selected){
+  const opts = ['all', ...data.companies.map(c=>c.id)];
+  return opts.map(id=>{
+    const label = id==='all' ? 'Tüm firmalar' : companyName(id);
+    return `<option value="${id}" ${selected===id?'selected':''}>${escapeHtml(label)}</option>`;
+  }).join('');
+}
+
+// ---------- RENDER ----------
+function render(){
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="sidebar no-print">
+      <div class="brand">
+        <div class="brand-mark">FOÇA KANTİN BAŞKANLIĞI</div>
+        <div class="brand-title">MF Takip</div>
+      </div>
+      <div class="nav">
+        ${navBtn('rapor','📊','Aylık Rapor')}
+        ${navBtn('faturalar','🧾','Faturalar')}
+        ${navBtn('bonus','📦','MF Ürünler')}
+        ${navBtn('firmalar','🏢','Firmalar')}
+        ${navBtn('veri','⛁','Veri & Yedekleme')}
+      </div>
+      <div class="sidebar-foot">
+        <div><span class="cloud-dot ${cloudReady?'':'pending'}"></span>${cloudReady ? 'Veritabanına bağlı, otomatik kaydediliyor' : 'Bağlanılıyor…'}</div>
+        <div style="margin-top:6px;">${data.companies.length} firma · ${data.invoices.length} fatura</div>
+        <button id="logout-btn" style="all:unset;cursor:pointer;color:#c9d3cd;font-size:11.5px;margin-top:10px;text-decoration:underline;">Çıkış yap</button>
+      </div>
+    </div>
+    <div class="main">${renderPage()}</div>
+  `;
+  attachHandlers();
+}
+
+function navBtn(key,icon,label){
+  return `<button data-tab="${key}" class="${ui.tab===key?'active':''}"><span class="nav-ic">${icon}</span>${label}</button>`;
+}
+
+function renderPage(){
+  if(ui.tab==='firmalar') return renderFirmalar();
+  if(ui.tab==='faturalar') return renderFaturalar();
+  if(ui.tab==='bonus') return renderBonus();
+  if(ui.tab==='rapor') return renderRapor();
+  if(ui.tab==='veri') return renderVeri();
+  return '';
+}
+
+// ---------- FİRMALAR ----------
+function renderFirmalar(){
+  const editing = ui.editCompanyId ? data.companies.find(c=>c.id===ui.editCompanyId) : null;
+  const rows = data.companies.length ? data.companies.map(c=>{
+    const invCount = data.invoices.filter(i=>i.companyId===c.id).length;
+    return `<tr>
+      <td>${escapeHtml(c.name)}</td>
+      <td class="num">%${c.percent}</td>
+      <td class="num">${invCount}</td>
+      <td><div class="row-actions">
+        <button class="icon-btn" data-edit-company="${c.id}">Düzenle</button>
+        <button class="icon-btn danger" data-del-company="${c.id}">Sil</button>
+      </div></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="4"><div class="empty">Henüz firma eklenmedi.</div></td></tr>`;
+
+  return `
+    <div class="page-head">
+      <div>
+        <h1>Firmalar</h1>
+        <p>Her firmanın fatura tutarına göre uyguladığı mal fazlası oranını burada tanımlayın.</p>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h2>${editing ? 'Firmayı düzenle' : 'Yeni firma ekle'}</h2>
+        <form data-form="company">
+          <input type="hidden" name="id" value="${editing?editing.id:''}">
+          <label>Firma adı</label>
+          <input name="name" required placeholder="Örn. Anadolu Gıda Ltd." value="${editing?escapeHtml(editing.name):''}">
+          <label>Mal fazlası oranı (%)</label>
+          <input name="percent" type="number" step="0.01" min="0" required placeholder="Örn. 5" value="${editing?editing.percent:''}">
+          <div class="btn-row">
+            <button type="submit" class="btn btn-primary">${editing?'Güncelle':'Firma ekle'}</button>
+            ${editing?'<button type="button" class="btn btn-ghost" data-cancel-company>Vazgeç</button>':''}
+          </div>
+        </form>
+        <p class="hint">Oran, faturanız üzerinden ne kadar mal fazlası almanız gerektiğini hesaplamak için kullanılır. Örneğin %5 oranlı bir firmadan 10.000 ₺'lik fatura kestiğinizde, 500 ₺ değerinde mal fazlası bekleniyor demektir.</p>
+      </div>
+      <div class="card">
+        <h2>Firma listesi</h2>
+        <table>
+          <thead><tr><th>Firma</th><th style="text-align:right">Oran</th><th style="text-align:right">Fatura</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ---------- FATURALAR ----------
+function renderFaturalar(){
+  const editing = ui.editInvoiceId ? data.invoices.find(i=>i.id===ui.editInvoiceId) : null;
+  const months = availableMonths(data.invoices);
+  const monthOptions = ['all',...months].map(m=>`<option value="${m}" ${ui.invoiceMonthFilter===m?'selected':''}>${monthLabel(m)}</option>`).join('');
+
+  let list = data.invoices.slice().sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+  if(ui.invoiceMonthFilter!=='all') list = list.filter(i=>monthKey(i.date)===ui.invoiceMonthFilter);
+  if(ui.invoiceCompanyFilter!=='all') list = list.filter(i=>i.companyId===ui.invoiceCompanyFilter);
+
+  const rows = list.length ? list.map(inv=>{
+    const expected = inv.amount * companyPercent(inv.companyId) / 100;
+    return `<tr>
+      <td>${fmtDate(inv.date)}</td>
+      <td>${escapeHtml(companyName(inv.companyId))}</td>
+      <td>${escapeHtml(inv.invoiceNo||'—')}</td>
+      <td class="num">${money(inv.amount)}</td>
+      <td class="num">${money(expected)}</td>
+      <td><div class="row-actions">
+        <button class="icon-btn" data-edit-invoice="${inv.id}">Düzenle</button>
+        <button class="icon-btn danger" data-del-invoice="${inv.id}">Sil</button>
+      </div></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="6"><div class="empty">Bu döneme ait fatura yok.</div></td></tr>`;
+
+  const companyOptions = data.companies.map(c=>`<option value="${c.id}" ${editing&&editing.companyId===c.id?'selected':''}>${escapeHtml(c.name)} (%${c.percent})</option>`).join('');
+
+  return `
+    <div class="page-head">
+      <div>
+        <h1>Faturalar</h1>
+        <p>Firmadan alınan faturaları kaydedin; beklenen mal fazlası tutarı otomatik hesaplanır. Alınan mal fazlası tutarları (firma+ay bazında) Aylık Rapor sayfasında görüntülenir.</p>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h2>${editing?'Faturayı düzenle':'Yeni fatura ekle'}</h2>
+        ${data.companies.length===0?'<p class="hint">Önce Firmalar sekmesinden en az bir firma eklemelisiniz.</p>':`
+        <form data-form="invoice">
+          <input type="hidden" name="id" value="${editing?editing.id:''}">
+          <label>Firma</label>
+          <select name="companyId" required>
+            <option value="" disabled ${editing?'':'selected'}>Firma seçin</option>
+            ${companyOptions}
+          </select>
+          <label>Fatura no</label>
+          <input name="invoiceNo" placeholder="Örn. FTR-2026-0142" value="${editing?escapeHtml(editing.invoiceNo||''):''}">
+          <label>Tarih</label>
+          <input name="date" type="date" required value="${editing?editing.date:''}">
+          <label>Fatura tutarı (₺)</label>
+          <input name="amount" type="number" step="0.01" min="0" required value="${editing?editing.amount:''}">
+          <div class="btn-row">
+            <button type="submit" class="btn btn-primary">${editing?'Güncelle':'Fatura ekle'}</button>
+            ${editing?'<button type="button" class="btn btn-ghost" data-cancel-invoice>Vazgeç</button>':''}
+          </div>
+        </form>`}
+      </div>
+      <div class="card">
+        <div class="toolbar">
+          <h2 style="margin:0">Fatura listesi</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select data-filter="invoiceMonth">${monthOptions}</select>
+            <select data-filter="invoiceCompany">${companyFilterOptions(ui.invoiceCompanyFilter)}</select>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>Tarih</th><th>Firma</th><th>Fatura No</th><th style="text-align:right">Tutar</th><th style="text-align:right">Beklenen M.F.</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ---------- MAL FAZLASI ÜRÜNLERİ ----------
+function renderBonus(){
+  const editing = ui.editBonusId ? data.bonuses.find(b=>b.id===ui.editBonusId) : null;
+  const months = availableBonusPeriods();
+  const monthOptions = ['all',...months].map(m=>`<option value="${m}" ${ui.bonusMonthFilter===m?'selected':''}>${monthLabel(m)}</option>`).join('');
+
+  let list = data.bonuses.slice().sort((a,b)=> (bonusPeriod(b)||'').localeCompare(bonusPeriod(a)||'') || (b.date||'').localeCompare(a.date||''));
+  if(ui.bonusMonthFilter!=='all') list = list.filter(b=>bonusPeriod(b)===ui.bonusMonthFilter);
+  if(ui.bonusCompanyFilter!=='all') list = list.filter(b=>b.companyId===ui.bonusCompanyFilter);
+
+  const rows = list.length ? list.map(b=>{
+    return `<tr>
+      <td class="mono">${monthLabel(bonusPeriod(b))}</td>
+      <td>${fmtDate(b.date)}</td>
+      <td>${escapeHtml(companyName(b.companyId))}</td>
+      <td class="mono">${escapeHtml(b.barcode||'—')}</td>
+      <td>${escapeHtml(b.name)}</td>
+      <td class="num">${b.qty}</td>
+      <td class="num">${money(b.unitPrice)}</td>
+      <td class="num">${money(b.qty*b.unitPrice)}</td>
+      <td><div class="row-actions">
+        <button class="icon-btn" data-edit-bonus="${b.id}">Düzenle</button>
+        <button class="icon-btn danger" data-del-bonus="${b.id}">Sil</button>
+      </div></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="9"><div class="empty">Bu döneme ait mal fazlası kaydı yok.</div></td></tr>`;
+
+  const bonusCompanyOptions = data.companies.map(c=>
+    `<option value="${c.id}" ${editing&&editing.companyId===c.id?'selected':''}>${escapeHtml(c.name)} (%${c.percent})</option>`
+  ).join('');
+
+  return `
+    <div class="page-head">
+      <div>
+        <h1>MF Ürünler</h1>
+        <p>Firmadan teslim alınan mal fazlası ürünleri barkot, ad, adet ve birim fiyatıyla kaydedin. Kayıtlar faturaya değil, firma ve döneme (aya) bağlıdır — firma mal fazlasını tek seferde, ay bitince toplu getirse de sorun olmaz.</p>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h2>${editing?'Kaydı düzenle':'Yeni mal fazlası ürünü'}</h2>
+        ${data.companies.length===0?'<p class="hint">Önce Firmalar sekmesinden bir firma eklemelisiniz.</p>':`
+        <form data-form="bonus">
+          <input type="hidden" name="id" value="${editing?editing.id:''}">
+          <label>İlgili firma</label>
+          <select name="companyId" required>
+            <option value="" disabled ${editing?'':'selected'}>Firma seçin</option>
+            ${bonusCompanyOptions}
+          </select>
+          <label>Ait olduğu ay</label>
+          <input name="period" type="month" required value="${editing?bonusPeriod(editing):''}">
+          <p class="hint" style="margin-top:4px">Ürünün hangi dönemin mal fazlası olduğu. Firma Ağustos mal fazlasını Eylül başında getirse bile burayı "Ağustos" seçebilirsin.</p>
+          <label>Teslim tarihi</label>
+          <input name="date" type="date" required value="${editing?editing.date:new Date().toISOString().slice(0,10)}">
+          <label>Ürün barkodu</label>
+          <input name="barcode" placeholder="Örn. 8690123456789" value="${editing?escapeHtml(editing.barcode||''):''}">
+          <label>Ürün adı</label>
+          <input name="name" required placeholder="Örn. 1 Lt Ayçiçek Yağı" value="${editing?escapeHtml(editing.name):''}">
+          <label>Adet</label>
+          <input name="qty" type="number" step="1" min="1" required value="${editing?editing.qty:''}">
+          <label>Birim fiyatı (₺)</label>
+          <input name="unitPrice" type="number" step="0.01" min="0" required value="${editing?editing.unitPrice:''}">
+          <div class="btn-row">
+            <button type="submit" class="btn btn-primary">${editing?'Güncelle':'Kaydet'}</button>
+            ${editing?'<button type="button" class="btn btn-ghost" data-cancel-bonus>Vazgeç</button>':''}
+          </div>
+        </form>`}
+      </div>
+      <div class="card">
+        <div class="toolbar">
+          <h2 style="margin:0">Mal fazlası listesi</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select data-filter="bonusMonth">${monthOptions}</select>
+            <select data-filter="bonusCompany">${companyFilterOptions(ui.bonusCompanyFilter)}</select>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>Ait olduğu ay</th><th>Teslim tarihi</th><th>Firma</th><th>Barkod</th><th>Ürün</th><th style="text-align:right">Adet</th><th style="text-align:right">B.Fiyat</th><th style="text-align:right">Tutar</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ---------- AYLIK RAPOR ----------
+function renderRapor(){
+  const months = Array.from(new Set([...availableMonths(data.invoices), ...availableBonusPeriods(), currentMonthKey()])).sort().reverse();
+  const monthOptions = ['all',...months].map(m=>`<option value="${m}" ${ui.reportMonth===m?'selected':''}>${monthLabel(m)}</option>`).join('');
+
+  let invoices = data.invoices.slice();
+  if(ui.reportMonth!=='all') invoices = invoices.filter(i=>monthKey(i.date)===ui.reportMonth);
+  if(ui.reportCompany!=='all') invoices = invoices.filter(i=>i.companyId===ui.reportCompany);
+  invoices.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+
+  let bonusesInPeriod = data.bonuses.slice();
+  if(ui.reportMonth!=='all') bonusesInPeriod = bonusesInPeriod.filter(b=>bonusPeriod(b)===ui.reportMonth);
+  if(ui.reportCompany!=='all') bonusesInPeriod = bonusesInPeriod.filter(b=>b.companyId===ui.reportCompany);
+
+  let totalAmount=0, totalExpected=0;
+  const invRows = invoices.map(inv=>{
+    const expected = inv.amount * companyPercent(inv.companyId) / 100;
+    totalAmount += inv.amount; totalExpected += expected;
+    return `<tr>
+      <td>${fmtDate(inv.date)}</td>
+      <td>${escapeHtml(companyName(inv.companyId))}</td>
+      <td>${escapeHtml(inv.invoiceNo||'—')}</td>
+      <td class="num">${money(inv.amount)}</td>
+      <td class="num">%${companyPercent(inv.companyId)}</td>
+      <td class="num">${money(expected)}</td>
+    </tr>`;
+  }).join('');
+
+  const totalReceived = bonusesInPeriod.reduce((s,b)=>s + b.qty*b.unitPrice, 0);
+
+  // Firma bazlı özet — beklenen faturalardan, alınan ise firma+aya bağlı MF kayıtlarından hesaplanır
+  const byCompany = {};
+  invoices.forEach(inv=>{
+    const expected = inv.amount * companyPercent(inv.companyId) / 100;
+    if(!byCompany[inv.companyId]) byCompany[inv.companyId] = {count:0, amount:0, expected:0, received:0};
+    byCompany[inv.companyId].count++;
+    byCompany[inv.companyId].amount += inv.amount;
+    byCompany[inv.companyId].expected += expected;
+  });
+  bonusesInPeriod.forEach(b=>{
+    if(!byCompany[b.companyId]) byCompany[b.companyId] = {count:0, amount:0, expected:0, received:0};
+    byCompany[b.companyId].received += b.qty*b.unitPrice;
+  });
+  const companyRows = Object.keys(byCompany).length ? Object.entries(byCompany).map(([cid,v])=>{
+    const fark = v.received - v.expected;
+    let badge;
+    if(Math.abs(fark) < 0.01) badge = '<span class="badge badge-ok">Tam</span>';
+    else if(fark < 0) badge = '<span class="badge badge-deficit">Eksik</span>';
+    else badge = '<span class="badge badge-surplus">Fazla</span>';
+    return `<tr>
+      <td>${escapeHtml(companyName(cid))}</td>
+      <td class="num">${v.count}</td>
+      <td class="num">${money(v.amount)}</td>
+      <td class="num">${money(v.expected)}</td>
+      <td class="num">${money(v.received)}</td>
+      <td class="num">${money(fark)}</td>
+      <td>${badge}</td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="7"><div class="empty">Bu dönemde veri yok.</div></td></tr>`;
+
+  const totalFark = totalReceived - totalExpected;
+
+  const reportCompanyLabel = ui.reportCompany==='all' ? 'Tüm firmalar' : companyName(ui.reportCompany);
+  const printedAt = new Date();
+  const printedAtStr = fmtDate(printedAt.toISOString().slice(0,10)) + ' ' + printedAt.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+
+
+  return `
+    <div class="report-filter-bar no-print">
+      <div class="field">
+        <label>Dönem</label>
+        <select class="month-select" data-filter="reportMonth">${monthOptions}</select>
+      </div>
+      <div class="field">
+        <label>Firma</label>
+        <select data-filter="reportCompany">${companyFilterOptions(ui.reportCompany)}</select>
+      </div>
+      <button class="btn btn-ghost-inv" data-print-report>🖨️ Yazdır</button>
+    </div>
+
+    <div class="page-head">
+      <div>
+        <h1>Aylık Rapor</h1>
+        <p>Seçtiğiniz dönemde fatura tutarına göre ne kadar mal fazlası bekleniyor, firma bazında ne kadarı fiilen alındı.</p>
+      </div>
+    </div>
+
+    <div class="print-only">
+      <div style="font-size:16px;font-weight:700;">Foça Kantin Başkanlığı</div>
+      <div style="font-size:13px;color:#4a5a54;">MF Takip &ndash; Aylık Rapor</div>
+      <div style="font-size:12px;margin-top:6px;">
+        Dönem: ${escapeHtml(monthLabel(ui.reportMonth))} &nbsp;|&nbsp;
+        Firma: ${escapeHtml(reportCompanyLabel)} &nbsp;|&nbsp;
+        Çıktı tarihi: ${printedAtStr}
+      </div>
+      <div style="border-bottom:2px solid #1c3b34;margin-top:10px"></div>
+    </div>
+
+    <div class="summary-row">
+      <div class="stat"><div class="label">Toplam fatura tutarı</div><div class="value">${money(totalAmount)}</div></div>
+      <div class="stat"><div class="label">Beklenen mal fazlası</div><div class="value">${money(totalExpected)}</div></div>
+      <div class="stat accent"><div class="label">Alınan mal fazlası</div><div class="value">${money(totalReceived)}</div></div>
+      <div class="stat ${totalFark<0?'deficit':''}"><div class="label">Fark</div><div class="value">${money(totalFark)}</div></div>
+    </div>
+
+    <div class="section-title">Firma bazında özet</div>
+    <div class="card">
+      <table class="table-grid">
+        <thead><tr><th>Firma</th><th style="text-align:right">Fatura</th><th style="text-align:right">Tutar</th><th style="text-align:right">Beklenen</th><th style="text-align:right">Alınan</th><th style="text-align:right">Fark</th><th>Durum</th></tr></thead>
+        <tbody>${companyRows}</tbody>
+      </table>
+      <p class="hint no-print">Alınan tutar, o firmaya ait ve seçilen aya kayıtlı tüm MF Ürünler girişlerinin toplamıdır — belirli bir faturaya değil, firma + aya bağlıdır.</p>
+    </div>
+
+    <div class="section-title-row">
+      <div class="section-title">Fatura bazında detay</div>
+      <label class="toggle-check no-print">
+        <input type="checkbox" data-toggle-invoice-detail ${ui.showInvoiceDetail?'checked':''}>
+        Göster
+      </label>
+    </div>
+    ${ui.showInvoiceDetail ? `
+    <div class="card">
+      <table>
+        <thead><tr><th>Tarih</th><th>Firma</th><th>Fatura No</th><th style="text-align:right">Tutar</th><th style="text-align:right">Oran</th><th style="text-align:right">Beklenen</th></tr></thead>
+        <tbody>${invRows || '<tr><td colspan="6"><div class="empty">Bu dönemde fatura yok.</div></td></tr>'}</tbody>
+      </table>
+    </div>
+    ` : ''}
+  `;
+}
+
+// ---------- VERİ & YEDEKLEME ----------
+function renderVeri(){
+  return `
+    <div class="page-head">
+      <div>
+        <h1>Veri & Yedekleme</h1>
+        <p>Yaptığınız her ekleme, düzenleme ve silme işlemi anında bulut veritabanına kaydedilir; ayrıca kaybolmasın diye tarayıcınızda da tutulur. Ayrı bir "kaydet" işlemi yapmanıza gerek yok.</p>
+      </div>
+    </div>
+    <div class="card" style="max-width:640px">
+      <h2><span class="cloud-dot ${cloudReady?'':'pending'}"></span>Otomatik kayıt</h2>
+      <p class="hint" style="margin-top:0;">${cloudReady
+        ? 'Şu an buluttaki veritabanına bağlısınız. Hangi cihazdan giriş yaparsanız yapın, aynı hesapla her zaman güncel veriyi görürsünüz.'
+        : 'Bulut veritabanına bağlanılıyor…'}</p>
+    </div>
+    <div class="card" style="max-width:640px;margin-top:16px">
+      <h2>Yedek al / geri yükle</h2>
+      <p class="hint" style="margin-top:0;">Bu, veritabanının yerini tutmaz — ekstra bir güvenlik kopyası almak veya verileri başka bir yerden içe aktarmak içindir.</p>
+      <div class="btn-row">
+        <button class="btn btn-ghost" data-export-json>⬇️ Dışa aktar (.json indir)</button>
+        <button class="btn btn-ghost" data-trigger-import>⬆️ İçe aktar (.json yükle)</button>
+      </div>
+      <input type="file" id="importFileInput" accept="application/json" style="display:none">
+      <p class="hint">İçe aktarma, mevcut tüm verilerin yerine seçtiğiniz dosyadaki verileri yazar.</p>
+    </div>
+  `;
+}
+
+
+function escapeHtml(str){
+  return String(str==null?'':str).replace(/[&<>"']/g, s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+}
+
+// ---------- EVENTS ----------
+function attachHandlers(){
+  const app = document.getElementById('app');
+
+  app.querySelectorAll('[data-tab]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ ui.tab = btn.dataset.tab; render(); });
+  });
+
+  const invoiceFilter = app.querySelector('[data-filter="invoiceMonth"]');
+  if(invoiceFilter) invoiceFilter.addEventListener('change', e=>{ ui.invoiceMonthFilter = e.target.value; render(); });
+
+  const bonusFilter = app.querySelector('[data-filter="bonusMonth"]');
+  if(bonusFilter) bonusFilter.addEventListener('change', e=>{ ui.bonusMonthFilter = e.target.value; render(); });
+
+  const invoiceCompanyFilter = app.querySelector('[data-filter="invoiceCompany"]');
+  if(invoiceCompanyFilter) invoiceCompanyFilter.addEventListener('change', e=>{ ui.invoiceCompanyFilter = e.target.value; render(); });
+
+  const bonusCompanyFilter = app.querySelector('[data-filter="bonusCompany"]');
+  if(bonusCompanyFilter) bonusCompanyFilter.addEventListener('change', e=>{ ui.bonusCompanyFilter = e.target.value; render(); });
+
+  const reportFilter = app.querySelector('[data-filter="reportMonth"]');
+  if(reportFilter) reportFilter.addEventListener('change', e=>{ ui.reportMonth = e.target.value; render(); });
+
+  const reportCompanyFilter = app.querySelector('[data-filter="reportCompany"]');
+  if(reportCompanyFilter) reportCompanyFilter.addEventListener('change', e=>{ ui.reportCompany = e.target.value; render(); });
+
+  const printBtn = app.querySelector('[data-print-report]');
+  if(printBtn) printBtn.addEventListener('click', ()=> window.print());
+
+  const logoutBtn = app.querySelector('#logout-btn');
+  if(logoutBtn) logoutBtn.addEventListener('click', ()=> auth.signOut());
+
+  const invoiceDetailToggle = app.querySelector('[data-toggle-invoice-detail]');
+  if(invoiceDetailToggle) invoiceDetailToggle.addEventListener('change', e=>{ ui.showInvoiceDetail = e.target.checked; render(); });
+
+  const exportBtn = app.querySelector('[data-export-json]');
+  if(exportBtn) exportBtn.addEventListener('click', exportJson);
+  const importTriggerBtn = app.querySelector('[data-trigger-import]');
+  if(importTriggerBtn) importTriggerBtn.addEventListener('click', triggerImport);
+  const importInput = app.querySelector('#importFileInput');
+  if(importInput) importInput.addEventListener('change', handleImportFile);
+
+  // Company form
+  const companyForm = app.querySelector('[data-form="company"]');
+  if(companyForm) companyForm.addEventListener('submit', e=>{
+    e.preventDefault();
+    const fd = new FormData(companyForm);
+    const id = fd.get('id');
+    const name = fd.get('name').trim();
+    const percent = parseFloat(fd.get('percent'));
+    if(id){
+      const c = data.companies.find(c=>c.id===id);
+      c.name = name; c.percent = percent;
+    } else {
+      data.companies.push({id:uid(), name, percent});
+    }
+    ui.editCompanyId = null;
+    saveData(); render();
+  });
+  app.querySelectorAll('[data-edit-company]').forEach(b=>b.addEventListener('click',()=>{ ui.editCompanyId = b.dataset.editCompany; render(); }));
+  app.querySelectorAll('[data-del-company]').forEach(b=>b.addEventListener('click',()=>{
+    if(confirm('Bu firmayı silmek istediğinize emin misiniz? Bağlı faturalar etkilenmez ama firma adı görünmez olur.')){
+      data.companies = data.companies.filter(c=>c.id!==b.dataset.delCompany);
+      saveData(); render();
+    }
+  }));
+  const cancelCompany = app.querySelector('[data-cancel-company]');
+  if(cancelCompany) cancelCompany.addEventListener('click', ()=>{ ui.editCompanyId=null; render(); });
+
+  // Invoice form
+  const invoiceForm = app.querySelector('[data-form="invoice"]');
+  if(invoiceForm) invoiceForm.addEventListener('submit', e=>{
+    e.preventDefault();
+    const fd = new FormData(invoiceForm);
+    const id = fd.get('id');
+    const payload = {
+      companyId: fd.get('companyId'),
+      invoiceNo: fd.get('invoiceNo').trim(),
+      date: fd.get('date'),
+      amount: parseFloat(fd.get('amount'))
+    };
+    if(id){
+      Object.assign(data.invoices.find(i=>i.id===id), payload);
+    } else {
+      data.invoices.push({id:uid(), ...payload});
+    }
+    ui.editInvoiceId = null;
+    saveData(); render();
+  });
+  app.querySelectorAll('[data-edit-invoice]').forEach(b=>b.addEventListener('click',()=>{ ui.editInvoiceId = b.dataset.editInvoice; render(); }));
+  app.querySelectorAll('[data-del-invoice]').forEach(b=>b.addEventListener('click',()=>{
+    if(confirm('Bu faturayı silmek istediğinize emin misiniz?')){
+      const id = b.dataset.delInvoice;
+      data.invoices = data.invoices.filter(i=>i.id!==id);
+      data.bonuses = data.bonuses.filter(bn=>bn.invoiceId!==id);
+      saveData(); render();
+    }
+  }));
+  const cancelInvoice = app.querySelector('[data-cancel-invoice]');
+  if(cancelInvoice) cancelInvoice.addEventListener('click', ()=>{ ui.editInvoiceId=null; render(); });
+
+  // Bonus form
+  const bonusForm = app.querySelector('[data-form="bonus"]');
+  if(bonusForm) bonusForm.addEventListener('submit', e=>{
+    e.preventDefault();
+    const fd = new FormData(bonusForm);
+    const id = fd.get('id');
+    const payload = {
+      companyId: fd.get('companyId'),
+      period: fd.get('period'),
+      date: fd.get('date'),
+      barcode: fd.get('barcode').trim(),
+      name: fd.get('name').trim(),
+      qty: parseFloat(fd.get('qty')),
+      unitPrice: parseFloat(fd.get('unitPrice'))
+    };
+    if(id){
+      Object.assign(data.bonuses.find(b=>b.id===id), payload);
+    } else {
+      data.bonuses.push({id:uid(), ...payload});
+    }
+    ui.editBonusId = null;
+    saveData(); render();
+  });
+  app.querySelectorAll('[data-edit-bonus]').forEach(b=>b.addEventListener('click',()=>{ ui.editBonusId = b.dataset.editBonus; render(); }));
+  app.querySelectorAll('[data-del-bonus]').forEach(b=>b.addEventListener('click',()=>{
+    if(confirm('Bu mal fazlası kaydını silmek istediğinize emin misiniz?')){
+      data.bonuses = data.bonuses.filter(bn=>bn.id!==b.dataset.delBonus);
+      saveData(); render();
+    }
+  }));
+  const cancelBonus = app.querySelector('[data-cancel-bonus]');
+  if(cancelBonus) cancelBonus.addEventListener('click', ()=>{ ui.editBonusId=null; render(); });
+}
+
+loadData();
+</script>
+</body>
+</html>

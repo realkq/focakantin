@@ -562,7 +562,7 @@ async function attachCloudSync(){
     }
   }catch(e){ console.error('İlk bulut yükleme hatası', e); }
   cloudReady = true;
-  render();
+  ();
   if(!unsubscribeSnapshot){
     unsubscribeSnapshot = DOC_REF.onSnapshot(snap=>{
       if(!snap.exists) return;
@@ -1461,8 +1461,30 @@ function attachHandlers(){
   const app = document.getElementById('app');
 
   app.querySelectorAll('[data-tab]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{ ui.tab = btn.dataset.tab; render(); });
+  btn.addEventListener('click', async ()=>{
+    // Veri & Yedekleme bölümü yönetici şifresi ile korunur.
+    if(btn.dataset.tab==='veri'){
+      const pw = await modalPrompt(
+        'Yönetici şifresi',
+        'Veri & Yedekleme bölümüne girmek için yönetici şifresini girin:',
+        'password'
+      );
+
+      if(pw===null) return;
+
+      if(pw!=='5464'){
+        await modalAlert(
+          'Hatalı şifre',
+          'Yönetici şifresi hatalı. Bu bölüme giriş yapılamadı.'
+        );
+        return;
+      }
+    }
+
+    ui.tab = btn.dataset.tab;
+    render();
   });
+});
 
   const invoiceFilter = app.querySelector('[data-filter="invoiceMonth"]');
   if(invoiceFilter) invoiceFilter.addEventListener('change', e=>{ ui.invoiceMonthFilter = e.target.value; render(); });

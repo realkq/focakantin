@@ -4,32 +4,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Foça Kantin Başkanlığı MF Takip</title>
+<link rel="icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#16241f;
-    --ink-soft:#5b6b64;
-    --bg:#eef1ec;
+    --ink:#16211d;
+    --ink-soft:#5d6f67;
+    --bg:#edf2ee;
     --paper:#ffffff;
-    --line:#dde3da;
-    --pine:#1c3b34;
-    --pine-light:#2c5148;
-    --stamp:#c1622b;
-    --stamp-soft:#f3ddc9;
-    --brick:#a23b3b;
-    --brick-soft:#f3dbd8;
-    --ok:#2f6f52;
-    --ok-soft:#dcece0;
-    --radius:10px;
-    --radius-sm:7px;
-    --shadow-sm:0 1px 2px rgba(22,36,31,0.05);
-    --shadow-md:0 6px 20px rgba(22,36,31,0.08);
+    --line:#dbe5db;
+    --pine:#1d3a5f;
+    --pine-deep:#0f1e33;
+    --pine-light:#2c537f;
+    --stamp:#c96a1f;
+    --stamp-deep:#a95515;
+    --stamp-soft:#fbe3c8;
+    --brick:#b03a3a;
+    --brick-soft:#f7dbd7;
+    --ok:#2c7a52;
+    --ok-soft:#d7ebde;
+    --radius:14px;
+    --radius-sm:9px;
+    --shadow-sm:0 1px 2px rgba(15,30,51,0.06),0 1px 3px rgba(15,30,51,0.04);
+    --shadow-md:0 10px 30px rgba(15,30,51,0.12);
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
     background:var(--bg);
+    background-image:radial-gradient(1100px 380px at 85% -10%,rgba(29,58,95,0.08),transparent);
     color:var(--ink);
     font-family:'Inter',system-ui,sans-serif;
     -webkit-font-smoothing:antialiased;
@@ -41,7 +45,7 @@
   .sidebar{
     width:224px;
     flex-shrink:0;
-    background:var(--pine);
+    background:linear-gradient(180deg,var(--pine) 0%,var(--pine-deep) 100%);
     color:#eef1ec;
     padding:26px 0;
     display:flex;
@@ -55,8 +59,8 @@
   .brand-mark{
     font-family:'IBM Plex Mono',monospace;
     font-size:11.5px;
-    letter-spacing:0.05em;
-    color:var(--stamp);
+    letter-spacing:0.08em;
+    color:#f0a95c;
     font-weight:600;
   }
   .brand-title{
@@ -66,6 +70,13 @@
     line-height:1.3;
     letter-spacing:-0.01em;
   }
+  /* Kurum logosu: logo.png varsa metinlerin yerine görünür */
+  .brand-logo{display:none;width:100%;height:auto;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.45));}
+  .brand-logo.ok{display:block;}
+  .brand-logo.ok + .brand-text{display:none;}
+  .login-logo{display:none;width:100%;height:auto;margin-bottom:6px;}
+  .login-logo.ok{display:block;}
+  .login-logo.ok ~ .login-fallback{display:none;}
   .nav{display:flex;flex-direction:column;padding:0 12px;gap:2px;}
   .nav button{
     all:unset;
@@ -77,12 +88,12 @@
     border-radius:var(--radius-sm);
     font-size:13.5px;
     font-weight:500;
-    color:#c9d3cd;
+    color:#c3d2cb;
     transition:background .14s ease, color .14s ease;
   }
   .nav button .nav-ic{font-size:14px;width:16px;text-align:center;opacity:0.85;}
-  .nav button:hover{background:rgba(255,255,255,0.07);color:#fff;}
-  .nav button.active{background:var(--pine-light);color:#fff;}
+  .nav button:hover{background:rgba(255,255,255,0.08);color:#fff;}
+  .nav button.active{background:rgba(255,255,255,0.13);color:#fff;box-shadow:inset 3px 0 0 #f0a95c;}
   .sidebar-foot{
     margin-top:auto;
     padding:16px 22px 0 22px;
@@ -121,11 +132,11 @@
     border-radius:var(--radius-sm);
     font-size:13.5px;
     font-family:inherit;
-    background:#fbfbfa;
+    background:#fff;
     color:var(--ink);
     transition:border-color .12s ease, box-shadow .12s ease;
   }
-  input:focus,select:focus{outline:none;border-color:var(--pine-light);box-shadow:0 0 0 3px rgba(44,81,72,0.12);background:#fff;}
+  input:focus,select:focus{outline:none;border-color:var(--pine-light);box-shadow:0 0 0 3px rgba(44,83,127,0.16);background:#fff;}
 
   .btn{
     all:unset;
@@ -140,29 +151,30 @@
     font-size:13.5px;
     font-weight:600;
     text-align:center;
-    transition:background .12s ease, transform .05s ease, opacity .12s ease;
+    transition:background .12s ease, transform .05s ease, opacity .12s ease, box-shadow .12s ease;
   }
   .btn:active{transform:translateY(1px);}
-  .btn-primary{background:var(--pine);color:#fff;}
-  .btn-primary:hover{background:var(--pine-light);}
-  .btn-ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line);}
-  .btn-ghost:hover{background:#f2f2ee;color:var(--ink);}
+  .btn-primary{background:linear-gradient(180deg,var(--pine-light),var(--pine));color:#fff;box-shadow:0 2px 8px rgba(15,30,51,0.30);}
+  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-ghost{background:var(--paper);color:var(--ink-soft);border:1px solid var(--line);}
+  .btn-ghost:hover{background:#eff4ef;color:var(--ink);}
   .btn-row{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;}
 
   table{width:100%;border-collapse:collapse;font-size:13px;}
   th{
     text-align:left;
-    font-weight:600;
+    font-weight:700;
     color:var(--ink-soft);
-    font-size:11px;
-    letter-spacing:0.01em;
+    font-size:10.5px;
+    letter-spacing:0.07em;
+    text-transform:uppercase;
     padding:9px 10px;
     border-bottom:1px solid var(--line);
   }
-  td{padding:10px 10px;border-bottom:1px solid #eef0eb;vertical-align:middle;}
+  td{padding:10px 10px;border-bottom:1px solid #edf1ed;vertical-align:middle;}
   tr:last-child td{border-bottom:none;}
   tbody tr{transition:background .1s ease;}
-  tbody tr:hover{background:#f8f9f6;}
+  tbody tr:hover{background:#f3f7f3;}
   .num{font-family:'IBM Plex Mono',monospace;font-size:12.5px;text-align:right;}
   .row-actions{display:flex;gap:4px;justify-content:flex-end;}
   .icon-btn{
@@ -172,7 +184,9 @@
   .icon-btn.danger:hover{background:var(--brick-soft);color:var(--brick);}
 
   .badge{
-    display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;
+    display:inline-block;padding:4px 10px;border-radius:20px;font-size:10.5px;font-weight:700;
+    letter-spacing:0.02em;
+    border:1px solid rgba(0,0,0,0.05);
     font-family:'IBM Plex Mono',monospace;
   }
   .badge-ok{background:var(--ok-soft);color:var(--ok);}
@@ -186,13 +200,16 @@
 
   .summary-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
   @media (max-width:760px){.summary-row{grid-template-columns:repeat(2,1fr);}}
-  .stat{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:17px 18px;box-shadow:var(--shadow-sm);}
-  .stat .label{font-size:11.5px;color:var(--ink-soft);font-weight:500;}
+  .stat{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:17px 18px 17px 21px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;}
+  .stat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--pine);}
+  .stat.accent::before{background:var(--stamp);}
+  .stat.deficit::before{background:var(--brick);}
+  .stat .label{font-size:10.5px;color:var(--ink-soft);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;}
   .stat .value{font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;margin-top:7px;}
   .stat.accent .value{color:var(--stamp);}
   .stat.deficit .value{color:var(--brick);}
 
-  .section-title{font-size:13px;font-weight:600;color:var(--ink-soft);margin:28px 0 10px 0;}
+  .section-title{font-size:12px;font-weight:700;color:var(--ink-soft);margin:28px 0 10px 0;letter-spacing:0.06em;text-transform:uppercase;}
   .section-title:first-child{margin-top:0;}
   .section-title-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin:28px 0 10px 0;}
   .section-title-row .section-title{margin:0;}
@@ -202,10 +219,11 @@
   /* Rapor: üstte belirgin dönem filtre çubuğu */
   .report-filter-bar{
     display:flex;align-items:center;gap:12px;flex-wrap:wrap;
-    background:var(--pine);
+    background:linear-gradient(180deg,var(--pine) 0%,var(--pine-deep) 100%);
     color:#eef1ec;
     padding:14px 18px;
     border-radius:var(--radius);
+    border:1px solid rgba(255,255,255,0.14);
     margin-bottom:22px;
     box-shadow:var(--shadow-md);
   }
@@ -231,6 +249,10 @@
   table.table-grid thead th{background:#e7ebe4;}
   table.table-grid tbody tr:nth-child(even){background:#f5f7f3;}
   table.table-grid tbody tr:hover{background:var(--stamp-soft);}
+  /* Özet toplam satırı: ekranda ve yazdırmada zıt renk */
+  table.table-grid tfoot tr.total-row{background:var(--pine);color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  table.table-grid tfoot tr.total-row td{color:#fff;border-color:var(--pine);font-weight:700;}
+  table.table-grid tfoot tr.total-row .num{color:#fff;}
 
   .hint{font-size:12px;color:var(--ink-soft);margin-top:10px;line-height:1.55;}
 
@@ -240,14 +262,46 @@
     .print-only{display:block !important;}
     body{background:#fff;}
     #app{display:block;}
-    .main{padding:0;max-width:100%;}
-    .card{border:1px solid #999;padding:12px;break-inside:avoid;}
-    .summary-row{grid-template-columns:repeat(4,1fr);}
-    table{font-size:11px;}
-    th,td{padding:5px 6px;}
+    .main{padding:0;max-width:100%;width:100%;}
+    body{background:#fff !important;color:#16241f !important;}
+    .card,.stat{background:#fff !important;}
+    .stat .value{color:#16241f !important;}
+    .stat.accent .value{color:#c1622b !important;}
+    .stat.deficit .value{color:#a23b3b !important;}
+    input,select{background:#fff !important;color:#16241f !important;}
+    .card{border:1px solid #999;padding:8px;break-inside:avoid;max-width:100%;overflow:hidden;}
+    .summary-row{grid-template-columns:repeat(4,1fr);gap:8px;}
+    .stat{padding:8px 9px;min-width:0;overflow:hidden;}
+    .stat .label{font-size:9px;}
+    .stat .value{font-size:11px;overflow-wrap:anywhere;word-break:break-word;}
+    table{width:100%;max-width:100%;font-size:8.5px;table-layout:auto;}
+    th,td{padding:3px 4px;vertical-align:middle;overflow-wrap:break-word;}
+    /* Firma/Ay sütunu kaysın, rakam sütunları tek satırda sığsın */
+    table.table-grid td:first-child, table.table-grid th:first-child{white-space:normal;overflow-wrap:break-word;max-width:34mm;}
+    table.table-grid td:nth-child(n+2), table.table-grid th:nth-child(n+2){white-space:nowrap;}
+    .num{white-space:nowrap;font-size:8.5px;letter-spacing:-0.01em;}
+    .badge{font-size:8px;padding:2px 6px;white-space:nowrap;}
+    .mono{font-size:8.5px;}
     .section-title{margin:14px 0 8px 0;}
     tr{break-inside:avoid;}
-    @page{size:A4;margin:14mm 12mm;}
+    table.table-grid tfoot tr.total-row{background:#1d3a5f !important;color:#fff !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    table.table-grid tfoot tr.total-row td{color:#fff !important;border-color:#1d3a5f !important;}
+    table.table-grid tfoot tr.total-row .num{color:#fff !important;}
+    /* Mobil görünümde de baskı her zaman masaüstü (web) düzeninde çıksın */
+    body.mobile-view .main{padding:0;}
+    body.mobile-view .page-head h1{font-size:22px;}
+    body.mobile-view .summary-row{grid-template-columns:repeat(4,1fr);gap:8px;}
+    body.mobile-view .stat .value{font-size:11px;}
+    body.mobile-view .card{padding:8px;overflow:visible;}
+    body.mobile-view table{font-size:8.5px;min-width:0;}
+    body.mobile-view th,body.mobile-view td{padding:3px 4px;white-space:normal;}
+    body.mobile-view table.table-grid td:first-child,body.mobile-view table.table-grid th:first-child{max-width:34mm;min-width:0;}
+    body.mobile-view table.table-grid td:nth-child(n+2),body.mobile-view table.table-grid th:nth-child(n+2){white-space:nowrap;}
+    body.mobile-view .num{font-size:8.5px;}
+    body.mobile-view .badge{font-size:8px;}
+    body.mobile-view .mono{font-size:8.5px;}
+    body.mobile-view .toolbar{flex-direction:row;align-items:center;}
+    @page{size:A4 portrait;margin:10mm 8mm;}
   }
 
   /* Toast: otomatik kayıt bildirimi */
@@ -264,30 +318,201 @@
   }
   #toast.show{opacity:1;transform:translateY(0);}
   #toast .dot{width:6px;height:6px;border-radius:50%;background:#5fbf8f;flex-shrink:0;}
+
+  /* Alt imza barı */
+  body{padding-bottom:40px;}
+  .credit-bar{
+    position:fixed;left:0;right:0;bottom:0;z-index:40;
+    background:var(--pine);color:#eef1ec;
+    text-align:center;font-size:12px;font-weight:600;letter-spacing:0.02em;
+    padding:10px 12px;
+    border-top:1px solid rgba(255,255,255,0.12);
+  }
+
+  /* Görünüm değiştirme butonu (sayfa en üstü, sabit) */
+  #view-toggle{
+    position:fixed;top:12px;right:14px;z-index:70;
+    width:40px;height:40px;border-radius:50%;
+    background:var(--pine);color:#fff;border:1px solid rgba(255,255,255,0.25);
+    font-size:18px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:var(--shadow-md);
+  }
+  #view-toggle:hover{background:var(--pine-light);}
+  #theme-toggle{
+    position:fixed;top:12px;right:62px;z-index:70;
+    width:40px;height:40px;border-radius:50%;
+    background:var(--pine);color:#fff;border:1px solid rgba(255,255,255,0.25);
+    font-size:18px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:var(--shadow-md);
+  }
+  #theme-toggle:hover{background:var(--pine-light);}
+
+  /* Karanlık mod */
+  body.dark-mode{
+    --ink:#e9efec;
+    --ink-soft:#9db0a7;
+    --bg:#0f1513;
+    --paper:#17211e;
+    --line:#2b3b35;
+    --shadow-sm:none;
+    --shadow-md:0 6px 20px rgba(0,0,0,0.45);
+  }
+  body.dark-mode input,body.dark-mode select{background:#1e2a26;border-color:#2b3b35;color:var(--ink);}
+  body.dark-mode input:focus,body.dark-mode select:focus{background:#24332e;border-color:var(--pine-light);}
+  body.dark-mode td{border-bottom-color:#22302c;}
+  body.dark-mode tbody tr:hover{background:#1e2a26;}
+  body.dark-mode table.table-grid thead th{background:#22302c;}
+  body.dark-mode table.table-grid tbody tr:nth-child(even){background:#1a2522;}
+  body.dark-mode table.table-grid tbody tr:hover{background:#24332e;}
+  body.dark-mode .icon-btn:hover{background:#22302c;color:#fff;}
+  body.dark-mode .btn-ghost:hover{background:#22302c;color:#fff;}
+  body.dark-mode .hint{color:#9db0a7;}
+  body.dark-mode .report-filter-bar select{background:#1e2a26;color:#e9efec;border-color:#2b3b35;}
+  body.dark-mode .report-filter-bar select.month-select{color:#f0b26b;border-color:var(--stamp);}
+  body.dark-mode option{background:#1e2a26;color:#e9efec;}
+  body.dark-mode #login-screen{background:#0f1513 !important;}
+  body.dark-mode #login-screen>div{background:#17211e !important;border-color:#2b3b35 !important;}
+  body.dark-mode #login-screen>div>div:nth-child(3){color:#e9efec !important;}
+  body.dark-mode #login-screen label{color:#9db0a7 !important;}
+  body.dark-mode #login-screen input{background:#1e2a26 !important;border-color:#2b3b35 !important;color:#e9efec !important;}
+  body.dark-mode #login-screen p{color:#9db0a7 !important;}
+
+  /* Mobil görünüm modu (butonla açılır, dar ekranda otomatik) */
+  body.mobile-view #app{flex-direction:column;}
+  body.mobile-view .sidebar{width:100%;padding:14px 0 10px 0;}
+  body.mobile-view .brand{padding:0 16px 12px 16px;}
+  body.mobile-view .brand-title{font-size:16px;}
+  body.mobile-view .nav{flex-direction:row;overflow-x:auto;padding:0 10px 4px 10px;}
+  body.mobile-view .nav button{white-space:nowrap;flex-shrink:0;}
+  body.mobile-view .sidebar-foot{font-size:11px;padding:10px 16px 0 16px;}
+  body.mobile-view .main{padding:66px 14px 20px 14px;max-width:100%;}
+  body.mobile-view .page-head h1{font-size:19px;}
+  body.mobile-view .grid-2{grid-template-columns:1fr;}
+  body.mobile-view .summary-row{grid-template-columns:repeat(2,1fr);gap:10px;}
+  body.mobile-view .stat{padding:13px 14px;}
+  body.mobile-view .stat .value{font-size:16px;overflow-wrap:anywhere;}
+  body.mobile-view .card{padding:16px;max-width:100%;overflow-x:auto;}
+  body.mobile-view table{font-size:12px;min-width:560px;}
+  body.mobile-view th,body.mobile-view td{padding:8px 7px;white-space:nowrap;}
+  body.mobile-view table.table-grid td:first-child,body.mobile-view table.table-grid th:first-child{white-space:normal;min-width:110px;}
+  body.mobile-view .toolbar{flex-direction:column;align-items:flex-start;}
+  body.mobile-view .toolbar select{min-width:0;width:100%;}
+  body.mobile-view .report-filter-bar{flex-direction:column;align-items:stretch;}
+  body.mobile-view .report-filter-bar select{width:100%;}
+  body.mobile-view .report-filter-bar select.month-select{min-width:0;}
+  body.mobile-view .report-filter-bar .btn-ghost-inv{margin-left:0;}
+  body.mobile-view .credit-bar{font-size:11px;padding:8px 10px;}
+  @media (max-width:760px){
+    .card{overflow-x:auto;}
+    table{min-width:520px;}
+  }
+
+  /* Onay / şifre / uyarı penceresi (uygulama içi, tarayıcı kutusu yerine) */
+  .modal-overlay{
+    position:fixed;inset:0;z-index:60;
+    background:rgba(15,30,51,0.45);
+    display:flex;align-items:center;justify-content:center;
+    padding:20px;
+    animation:modalFade .15s ease;
+  }
+  @keyframes modalFade{from{opacity:0;}to{opacity:1;}}
+  .modal-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    box-shadow:0 18px 50px rgba(15,30,51,0.25);
+    max-width:400px;width:100%;
+    padding:24px 22px 20px 22px;
+    animation:modalPop .16s ease;
+  }
+  @keyframes modalPop{from{opacity:0;transform:translateY(8px) scale(0.98);}to{opacity:1;transform:none;}}
+  .modal-card h3{margin:0 0 8px 0;font-size:16px;font-weight:700;letter-spacing:-0.01em;}
+  .modal-card p{margin:0 0 6px 0;font-size:13.5px;color:var(--ink-soft);line-height:1.6;}
+  .modal-card input{
+    width:100%;margin-top:10px;padding:10px 11px;
+    border:1px solid var(--line);border-radius:var(--radius-sm);
+    font-size:13.5px;font-family:inherit;background:#fbfbfa;color:var(--ink);
+  }
+  .modal-card input:focus{outline:none;border-color:var(--pine-light);box-shadow:0 0 0 3px rgba(44,83,127,0.16);background:#fff;}
+  .modal-err{color:var(--brick);font-size:12.5px;min-height:18px;margin-top:8px;}
+  .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
 </style>
 </head>
 <body>
 
 <!-- ================= GİRİŞ EKRANI ================= -->
 <div id="login-screen" style="display:flex;min-height:100vh;align-items:center;justify-content:center;background:#eef1ec;font-family:'Inter',system-ui,sans-serif;padding:20px;">
-  <div style="background:#fff;border:1px solid #dde3da;border-radius:14px;padding:34px 32px;max-width:360px;width:100%;box-shadow:0 10px 34px rgba(22,36,31,0.09);">
-    <div style="width:36px;height:36px;border-radius:9px;background:#1c3b34;display:flex;align-items:center;justify-content:center;color:#c1622b;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:15px;margin-bottom:16px;">MF</div>
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;color:#c1622b;font-weight:600;">FOÇA KANTİN BAŞKANLIĞI</div>
+  <div style="background:#fff;border:1px solid #dde3da;border-radius:14px;padding:34px 32px;max-width:360px;width:100%;box-shadow:0 10px 34px rgba(15,30,51,0.09);">
+    <img class="login-logo" src="logo.png" alt="Foça Kantin Başkanlığı MF Takip" onload="this.classList.add('ok')" onerror="this.classList.remove('ok')">
+    <div class="login-fallback" style="width:36px;height:36px;border-radius:9px;background:#1d3a5f;display:flex;align-items:center;justify-content:center;color:#f0a95c;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:15px;margin-bottom:16px;">MF</div>
+    <div class="login-fallback" style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;color:#c1622b;font-weight:600;">FOÇA KANTİN BAŞKANLIĞI</div>
     <div style="font-size:19px;font-weight:700;margin:4px 0 22px 0;color:#16241f;letter-spacing:-0.01em;">MF Takip'e giriş yap</div>
     <form id="login-form">
-      <label style="display:block;font-size:12.5px;color:#5b6b64;margin-bottom:6px;font-weight:500;">E-posta</label>
-      <input id="login-email" type="email" required style="width:100%;padding:10px 11px;border:1px solid #dde3da;border-radius:7px;font-size:13.5px;margin-bottom:14px;box-sizing:border-box;background:#fbfbfa;">
+      <label style="display:block;font-size:12.5px;color:#5b6b64;margin-bottom:6px;font-weight:500;">Kullanıcı adı</label>
+      <input id="login-username" type="text" required autocomplete="username" placeholder="Örn. kantinfoca" value="kantinfoca" style="width:100%;padding:10px 11px;border:1px solid #dde3da;border-radius:7px;font-size:13.5px;margin-bottom:14px;box-sizing:border-box;background:#fbfbfa;">
       <label style="display:block;font-size:12.5px;color:#5b6b64;margin-bottom:6px;font-weight:500;">Şifre</label>
       <input id="login-password" type="password" required style="width:100%;padding:10px 11px;border:1px solid #dde3da;border-radius:7px;font-size:13.5px;margin-bottom:18px;box-sizing:border-box;background:#fbfbfa;">
-      <button type="submit" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;text-align:center;background:#1c3b34;color:#fff;padding:11px;border-radius:7px;font-weight:600;font-size:13.5px;">Giriş yap</button>
+      <button type="submit" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;text-align:center;background:#1d3a5f;color:#fff;padding:11px;border-radius:7px;font-weight:600;font-size:13.5px;">Giriş yap</button>
       <div id="login-error" style="color:#a23b3b;font-size:12.5px;margin-top:12px;"></div>
     </form>
-    <p style="font-size:11.5px;color:#8aa199;margin-top:18px;line-height:1.6;">Hesabınız yoksa yöneticinizin Firebase konsolundan sizin için bir kullanıcı oluşturması gerekir.</p>
+    <p style="font-size:11.5px;color:#8aa199;margin-top:18px;line-height:1.6;">Kullanıcı adınızla giriş yapın. Hesabınız yoksa yöneticinizin Firebase konsolundan <b>kullanıcıadınız@kantinfoca.local</b> şeklinde bir kullanıcı oluşturması gerekir.</p>
   </div>
 </div>
 
 <div id="app" style="display:none;"></div>
 <div id="toast"><span class="dot"></span><span id="toast-text"></span></div>
+<div id="modal-overlay" class="modal-overlay" style="display:none;">
+  <div class="modal-card">
+    <h3 id="modal-title"></h3>
+    <p id="modal-msg"></p>
+    <input id="modal-input" style="display:none;">
+    <div id="modal-err" class="modal-err"></div>
+    <div class="modal-btns">
+      <button id="modal-cancel" class="btn btn-ghost">Vazgeç</button>
+      <button id="modal-ok" class="btn btn-primary">Tamam</button>
+    </div>
+  </div>
+</div>
+<div class="credit-bar no-print">⚡ Tek.Asb.Kd.Üçvş. Buğra GÜRELDİ tarafından hazırlanmıştır. ⚡</div>
+<button id="view-toggle" class="no-print" title="Mobil görünüme geç">📱</button>
+<button id="theme-toggle" class="no-print" title="Karanlık moda geç">🌙</button>
+<script>
+// Mobil / masaüstü görünüm geçişi (seçim tarayıcıda saklanır)
+(function(){
+  const KEY = 'mf-mobil-gorunum-v1';
+  const btn = document.getElementById('view-toggle');
+  function apply(mobile){
+    document.body.classList.toggle('mobile-view', !!mobile);
+    if(btn){ btn.textContent = mobile ? '🖥️' : '📱'; btn.title = mobile ? 'Masaüstü görünüme geç' : 'Mobil görünüme geç'; }
+  }
+  let saved = null;
+  try{ saved = localStorage.getItem(KEY); }catch(e){}
+  if(saved===null && window.innerWidth < 760) saved = '1';
+  apply(saved==='1');
+  if(btn) btn.addEventListener('click', ()=>{
+    const mobile = !document.body.classList.contains('mobile-view');
+    try{ localStorage.setItem(KEY, mobile ? '1' : '0'); }catch(e){}
+    apply(mobile);
+  });
+  // Karanlık / aydınlık mod geçişi (seçim tarayıcıda saklanır)
+  const TKEY = 'mf-tema-v1';
+  const tbtn = document.getElementById('theme-toggle');
+  function applyTheme(dark){
+    document.body.classList.toggle('dark-mode', !!dark);
+    if(tbtn){ tbtn.textContent = dark ? '☀️' : '🌙'; tbtn.title = dark ? 'Aydınlık moda geç' : 'Karanlık moda geç'; }
+  }
+  let tsaved = null;
+  try{ tsaved = localStorage.getItem(TKEY); }catch(e){}
+  applyTheme(tsaved==='1');
+  if(tbtn) tbtn.addEventListener('click', ()=>{
+    const dark = !document.body.classList.contains('dark-mode');
+    try{ localStorage.setItem(TKEY, dark ? '1' : '0'); }catch(e){}
+    applyTheme(dark);
+  });
+})();
+</script>
 
 <!-- ================= FIREBASE (ücretsiz bulut veritabanı) ================= -->
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
@@ -309,6 +534,19 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 const DOC_REF = db.collection('mal-fazlasi').doc('veri'); // tüm veri tek dokümanda tutulur
+
+// Kullanıcı adı ile giriş: Firebase Auth e-posta istediği için
+// kullanıcı adı arkada sahte bir e-postaya çevrilir.
+// Örn. "kantin.admin" -> "kantin.admin@kantinfoca.local"
+// İçinde @ varsa gerçek e-posta kabul edilir (eski hesaplarla uyumlu).
+const USERNAME_DOMAIN = 'kantinfoca.local';
+function loginEmailForInput(input){
+  const v = String(input||'').trim();
+  if(!v) return '';
+  if(v.includes('@')) return v;
+  const clean = v.toLowerCase().replace(/\s+/g,'');
+  return clean + '@' + USERNAME_DOMAIN;
+}
 
 let cloudReady = false;
 let unsubscribeSnapshot = null;
@@ -359,12 +597,17 @@ auth.onAuthStateChanged(user=>{
 
 document.getElementById('login-form').addEventListener('submit', function(e){
   e.preventDefault();
-  const email = document.getElementById('login-email').value.trim();
+  const rawInput = document.getElementById('login-username').value.trim();
   const password = document.getElementById('login-password').value;
   const errEl = document.getElementById('login-error');
   errEl.textContent = '';
+  const email = loginEmailForInput(rawInput);
+  if(!email){
+    errEl.textContent = 'Geçerli bir kullanıcı adı yazın.';
+    return;
+  }
   auth.signInWithEmailAndPassword(email, password).catch(err=>{
-    errEl.textContent = 'Giriş başarısız: e-posta veya şifre hatalı.';
+    errEl.textContent = 'Giriş başarısız: kullanıcı adı veya şifre hatalı.';
     console.error(err);
   });
 });
@@ -383,7 +626,11 @@ let ui = {
   bonusCompanyFilter: 'all',
   reportMonth: currentMonthKey(),
   reportCompany: 'all',
-  showInvoiceDetail: false
+  reportExclVat: false,
+  reportVatRate: 20,
+  showInvoiceDetail: false,
+  invoiceDraft: {companyId:'', invoiceNo:'', date:'', amount:''},
+  bonusDraft: {companyId:'', period:'', date:'', barcode:'', name:'', qty:'', unitPrice:''}
 };
 
 const STORAGE_KEY = 'isletme-mal-fazlasi-v1';
@@ -431,6 +678,78 @@ function showToast(msg){
   toastTimer = setTimeout(()=> el.classList.remove('show'), 1800);
 }
 
+// Uygulama içi pencere: çirkin tarayıcı confirm/prompt/alert kutuları yerine.
+// modalConfirm -> true/false, modalPrompt -> yazılan değer / null, modalAlert -> bilgi.
+let modalResolve = null;
+function closeModal(result){
+  document.getElementById('modal-overlay').style.display = 'none';
+  const r = modalResolve; modalResolve = null;
+  if(r) r(result);
+}
+function openModal({title, msg, okText, cancelText, danger, showInput, inputType, check}){
+  return new Promise(resolve=>{
+    modalResolve = resolve;
+    const overlay = document.getElementById('modal-overlay');
+    const titleEl = document.getElementById('modal-title');
+    const msgEl = document.getElementById('modal-msg');
+    const inputEl = document.getElementById('modal-input');
+    const errEl = document.getElementById('modal-err');
+    const okBtn = document.getElementById('modal-ok');
+    const cancelBtn = document.getElementById('modal-cancel');
+    titleEl.textContent = title || '';
+    msgEl.textContent = msg || '';
+    errEl.textContent = '';
+    okBtn.textContent = okText || 'Tamam';
+    okBtn.className = 'btn ' + (danger ? 'btn-primary' : 'btn-primary');
+    okBtn.style.background = danger ? 'var(--brick)' : '';
+    cancelBtn.textContent = cancelText || 'Vazgeç';
+    cancelBtn.style.display = cancelText === null ? 'none' : '';
+    if(showInput){
+      inputEl.style.display = 'block';
+      inputEl.type = inputType || 'text';
+      inputEl.value = '';
+      inputEl.placeholder = '';
+    } else {
+      inputEl.style.display = 'none';
+    }
+    overlay.style.display = 'flex';
+    overlay.onclick = e=>{ if(e.target===overlay) closeModal(showInput ? null : false); };
+    okBtn.onclick = ()=>{
+      if(showInput){
+        const v = inputEl.value;
+        if(check){
+          const err = check(v);
+          if(err){ errEl.textContent = err; inputEl.focus(); return; }
+        }
+        closeModal(v);
+      } else {
+        closeModal(true);
+      }
+    };
+    cancelBtn.onclick = ()=> closeModal(showInput ? null : false);
+    inputEl.onkeydown = e=>{ if(e.key==='Enter') okBtn.click(); };
+    overlay.onkeydown = e=>{ if(e.key==='Escape') closeModal(showInput ? null : false); };
+    setTimeout(()=>{ (showInput ? inputEl : okBtn).focus(); }, 30);
+  });
+}
+function modalConfirm(title, msg, okText){
+  return openModal({title, msg, okText: okText||'Sil', danger:true});
+}
+function modalPrompt(title, msg, inputType){
+  return openModal({title, msg, okText:'Onayla', showInput:true, inputType:inputType||'text',
+    check: v=> v ? '' : 'Bu alan boş bırakılamaz.'});
+}
+function modalAlert(title, msg){
+  return openModal({title, msg, okText:'Tamam', cancelText:null});
+}
+document.addEventListener('keydown', e=>{
+  const overlay = document.getElementById('modal-overlay');
+  if(overlay && overlay.style.display==='flex' && e.key==='Escape'){
+    const inputVisible = document.getElementById('modal-input').style.display!=='none';
+    closeModal(inputVisible ? null : false);
+  }
+});
+
 function exportJson(){
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
@@ -450,19 +769,102 @@ function handleImportFile(e){
   const file = e.target.files[0];
   if(!file) return;
   const reader = new FileReader();
-  reader.onload = ()=>{
+  reader.onload = async ()=>{
     try{
       const parsed = JSON.parse(reader.result);
-      if(confirm('Mevcut veriler, seçtiğiniz dosyadaki verilerle değiştirilecek. Devam edilsin mi?')){
+      const ok = await modalConfirm('İçe aktar', 'Mevcut veriler, seçtiğiniz dosyadaki verilerle değiştirilecek. Devam edilsin mi?', 'İçe aktar');
+      if(ok){
         data = Object.assign({companies:[],invoices:[],bonuses:[]}, parsed);
         saveData();
         render();
         showToast('İçe aktarıldı');
       }
-    }catch(err){ alert('Dosya okunamadı veya geçersiz format.'); }
+    }catch(err){ modalAlert('Dosya okunamadı', 'Dosya okunamadı veya geçersiz format.'); }
   };
   reader.readAsText(file);
   e.target.value = '';
+}
+
+// ---------- TARİHLİ BULUT YEDEKLERİ (yedekler koleksiyonu) ----------
+function backupDocId(d){
+  const p = n=>String(n).padStart(2,'0');
+  return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) + '_' + p(d.getHours()) + '-' + p(d.getMinutes()) + '-' + p(d.getSeconds());
+}
+function backupStatusMsg(msg){
+  const el = document.getElementById('backupStatus');
+  if(el) el.textContent = msg;
+}
+async function cloudBackup(){
+  if(!cloudReady){ backupStatusMsg('Önce veritabanı bağlantısının kurulmasını bekleyin.'); return; }
+  const now = new Date();
+  const id = backupDocId(now);
+  backupStatusMsg('Yedekleniyor… (' + id + ')');
+  try{
+    const user = (typeof auth!=='undefined' && auth.currentUser) ? auth.currentUser.email : '';
+    await db.collection('yedekler').doc(id).set({
+      name: id,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      createdAtStr: id,
+      by: user || '',
+      payload: JSON.parse(JSON.stringify(data)),
+      counts: {companies: data.companies.length, invoices: data.invoices.length, bonuses: data.bonuses.length}
+    });
+    backupStatusMsg('Yedeklendi: ' + id);
+    showToast('Buluta yedeklendi');
+    loadBackupList();
+  }catch(err){
+    console.error('Bulut yedekleme hatası', err);
+    const noPerm = err && err.code === 'permission-denied';
+    backupStatusMsg(noPerm
+      ? 'İzin hatası: Firestore Kuralları > yedekler koleksiyonuna giriş yapmış kullanıcılara yazma izni verin.'
+      : 'Yedekleme başarısız: ' + (err.message||err));
+  }
+}
+async function loadBackupList(){
+  const box = document.getElementById('backupList');
+  if(!box) return;
+  if(!cloudReady){ box.innerHTML = '<p class="hint">Bağlantı kurulunca yedek listesi gelecek.</p>'; return; }
+  box.innerHTML = '<p class="hint">Yedekler yükleniyor…</p>';
+  try{
+    const snap = await db.collection('yedekler').orderBy('name','desc').limit(20).get();
+    if(snap.empty){ box.innerHTML = '<p class="hint">Henüz bulut yedeği yok.</p>'; return; }
+    box.innerHTML = '<table><thead><tr><th>Tarih</th><th>İçerik</th><th></th></tr></thead><tbody>' + snap.docs.map(doc=>{
+      const v = doc.data()||{};
+      const c = v.counts||{};
+      const label = v.createdAtStr || doc.id;
+      const info = (c.companies||0) + ' firma · ' + (c.invoices||0) + ' fatura · ' + (c.bonuses||0) + ' MF';
+      return '<tr><td class="mono">' + escapeHtml(label) + '</td><td>' + escapeHtml(info) + '</td>' +
+        '<td><div class="row-actions"><button class="icon-btn" data-restore-backup="' + escapeHtml(doc.id) + '">Geri yükle</button>' +
+        '<button class="icon-btn danger" data-del-backup="' + escapeHtml(doc.id) + '">Sil</button></div></td></tr>';
+    }).join('') + '</tbody></table>';
+    box.querySelectorAll('[data-restore-backup]').forEach(b=>b.addEventListener('click',()=>restoreBackup(b.dataset.restoreBackup)));
+    box.querySelectorAll('[data-del-backup]').forEach(b=>b.addEventListener('click',()=>deleteBackup(b.dataset.delBackup)));
+  }catch(err){
+    console.error('Yedek listesi hatası', err);
+    box.innerHTML = '<p class="hint">Liste alınamadı: ' + escapeHtml(err.message||err) + '</p>';
+  }
+}
+async function restoreBackup(id){
+  const ok = await modalConfirm('Yedeği geri yükle', id + ' tarihli yedek geri yüklenecek. Mevcut veriler bununla değiştirilecek. Devam edilsin mi?', 'Geri yükle');
+  if(!ok) return;
+  try{
+    const doc = await db.collection('yedekler').doc(id).get();
+    if(!doc.exists){ modalAlert('Bulunamadı', 'Yedek bulunamadı.'); return; }
+    const payload = doc.data().payload || {};
+    data = Object.assign({companies:[],invoices:[],bonuses:[]}, payload);
+    await saveData();
+    render();
+    showToast('Yedekten geri yüklendi');
+  }catch(err){ console.error('Geri yükleme hatası', err); modalAlert('Geri yükleme başarısız', err.message||String(err)); }
+}
+async function deleteBackup(id){
+  const ok = await modalConfirm('Yedeği sil', id + ' tarihli yedek silinsin mi?', 'Sil');
+  if(!ok) return;
+  try{
+    await db.collection('yedekler').doc(id).delete();
+    showToast('Yedek silindi');
+    loadBackupList();
+  }catch(err){ console.error('Yedek silme hatası', err); modalAlert('Silme başarısız', err.message||String(err)); }
 }
 
 function money(n){
@@ -503,11 +905,16 @@ function availableBonusPeriods(){
   const set = new Set(data.bonuses.map(b=>bonusPeriod(b)).filter(Boolean));
   return Array.from(set).sort().reverse();
 }
-function companyFilterOptions(selected){
-  const opts = ['all', ...data.companies.map(c=>c.id)];
+function companyFilterOptions(selected, allowAll=true){
+  const opts = [...(allowAll?['all']:[]), ...data.companies.map(c=>c.id)];
+  // allowAll=false iken selected 'all' kalırsa ilk firmaya düş
+  let sel = selected;
+  if(!allowAll && (sel==='all' || !opts.includes(sel))){
+    sel = opts[0] || 'all';
+  }
   return opts.map(id=>{
     const label = id==='all' ? 'Tüm firmalar' : companyName(id);
-    return `<option value="${id}" ${selected===id?'selected':''}>${escapeHtml(label)}</option>`;
+    return `<option value="${id}" ${sel===id?'selected':''}>${escapeHtml(label)}</option>`;
   }).join('');
 }
 
@@ -516,10 +923,9 @@ function render(){
   const app = document.getElementById('app');
   app.innerHTML = `
     <div class="sidebar no-print">
-      <div class="brand">
-        <div class="brand-mark">FOÇA KANTİN BAŞKANLIĞI</div>
-        <div class="brand-title">MF Takip</div>
-      </div>
+      <div class="brand" style="padding: 15px 16px; text-align: center;">
+  <img src="logo.png" alt="Foça Kantin Başkanlığı MF Takip" style="width: 100%; height: auto; max-width: 180px; display: block; margin: 0 auto; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));">
+</div>
       <div class="nav">
         ${navBtn('rapor','📊','Aylık Rapor')}
         ${navBtn('faturalar','🧾','Faturalar')}
@@ -626,7 +1032,8 @@ function renderFaturalar(){
     </tr>`;
   }).join('') : `<tr><td colspan="6"><div class="empty">Bu döneme ait fatura yok.</div></td></tr>`;
 
-  const companyOptions = data.companies.map(c=>`<option value="${c.id}" ${editing&&editing.companyId===c.id?'selected':''}>${escapeHtml(c.name)} (%${c.percent})</option>`).join('');
+  const draft = ui.invoiceDraft || {companyId:'', invoiceNo:'', date:'', amount:''};
+  const companyOptions = data.companies.map(c=>`<option value="${c.id}" ${(editing&&editing.companyId===c.id)||(!editing&&draft.companyId===c.id)?'selected':''}>${escapeHtml(c.name)} (%${c.percent})</option>`).join('');
 
   return `
     <div class="page-head">
@@ -643,27 +1050,27 @@ function renderFaturalar(){
           <input type="hidden" name="id" value="${editing?editing.id:''}">
           <label>Firma</label>
           <select name="companyId" required>
-            <option value="" disabled ${editing?'':'selected'}>Firma seçin</option>
+            <option value="" disabled ${editing||draft.companyId?'':'selected'}>Firma seçin</option>
             ${companyOptions}
           </select>
           <label>Fatura no</label>
-          <input name="invoiceNo" placeholder="Örn. FTR-2026-0142" value="${editing?escapeHtml(editing.invoiceNo||''):''}">
+          <input name="invoiceNo" placeholder="Örn. FTR-2026-0142" value="${editing?escapeHtml(editing.invoiceNo||''):escapeHtml(draft.invoiceNo||'')}">
           <label>Tarih</label>
-          <input name="date" type="date" required value="${editing?editing.date:''}">
+          <input name="date" type="date" required value="${editing?editing.date:escapeHtml(draft.date||'')}">
           <label>Fatura tutarı (₺)</label>
-          <input name="amount" type="number" step="0.01" min="0" required value="${editing?editing.amount:''}">
+          <input name="amount" type="number" step="0.01" min="0" required value="${editing?editing.amount:escapeHtml(draft.amount||'')}">
           <div class="btn-row">
             <button type="submit" class="btn btn-primary">${editing?'Güncelle':'Fatura ekle'}</button>
-            ${editing?'<button type="button" class="btn btn-ghost" data-cancel-invoice>Vazgeç</button>':''}
+            ${editing?'<button type="button" class="btn btn-ghost" data-cancel-invoice>Vazgeç</button>':'<button type="button" class="btn btn-ghost" data-clear-invoice>Temizle</button>'}
           </div>
         </form>`}
       </div>
       <div class="card">
-        <div class="toolbar">
+        <div class="toolbar" style="flex-direction:column;align-items:flex-start;">
           <h2 style="margin:0">Fatura listesi</h2>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <select data-filter="invoiceMonth">${monthOptions}</select>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start;">
             <select data-filter="invoiceCompany">${companyFilterOptions(ui.invoiceCompanyFilter)}</select>
+            <select data-filter="invoiceMonth">${monthOptions}</select>
           </div>
         </div>
         <table>
@@ -702,8 +1109,9 @@ function renderBonus(){
     </tr>`;
   }).join('') : `<tr><td colspan="9"><div class="empty">Bu döneme ait mal fazlası kaydı yok.</div></td></tr>`;
 
+  const bDraft = ui.bonusDraft || {companyId:'', period:'', date:'', barcode:'', name:'', qty:'', unitPrice:''};
   const bonusCompanyOptions = data.companies.map(c=>
-    `<option value="${c.id}" ${editing&&editing.companyId===c.id?'selected':''}>${escapeHtml(c.name)} (%${c.percent})</option>`
+    `<option value="${c.id}" ${(editing&&editing.companyId===c.id)||(!editing&&bDraft.companyId===c.id)?'selected':''}>${escapeHtml(c.name)} (%${c.percent})</option>`
   ).join('');
 
   return `
@@ -721,25 +1129,25 @@ function renderBonus(){
           <input type="hidden" name="id" value="${editing?editing.id:''}">
           <label>İlgili firma</label>
           <select name="companyId" required>
-            <option value="" disabled ${editing?'':'selected'}>Firma seçin</option>
+            <option value="" disabled ${editing||bDraft.companyId?'':'selected'}>Firma seçin</option>
             ${bonusCompanyOptions}
           </select>
           <label>Ait olduğu ay</label>
-          <input name="period" type="month" required value="${editing?bonusPeriod(editing):''}">
+          <input name="period" type="month" required value="${editing?bonusPeriod(editing):escapeHtml(bDraft.period||'')}">
           <p class="hint" style="margin-top:4px">Ürünün hangi dönemin mal fazlası olduğu. Firma Ağustos mal fazlasını Eylül başında getirse bile burayı "Ağustos" seçebilirsin.</p>
           <label>Teslim tarihi</label>
-          <input name="date" type="date" required value="${editing?editing.date:new Date().toISOString().slice(0,10)}">
+          <input name="date" type="date" required value="${editing?editing.date:escapeHtml(bDraft.date||new Date().toISOString().slice(0,10))}">
           <label>Ürün barkodu</label>
-          <input name="barcode" placeholder="Örn. 8690123456789" value="${editing?escapeHtml(editing.barcode||''):''}">
+          <input name="barcode" placeholder="Örn. 8690123456789" value="${editing?escapeHtml(editing.barcode||''):escapeHtml(bDraft.barcode||'')}">
           <label>Ürün adı</label>
-          <input name="name" required placeholder="Örn. 1 Lt Ayçiçek Yağı" value="${editing?escapeHtml(editing.name):''}">
+          <input name="name" required placeholder="Örn. 1 Lt Ayçiçek Yağı" value="${editing?escapeHtml(editing.name):escapeHtml(bDraft.name||'')}">
           <label>Adet</label>
-          <input name="qty" type="number" step="1" min="1" required value="${editing?editing.qty:''}">
+          <input name="qty" type="number" step="1" min="1" required value="${editing?editing.qty:escapeHtml(bDraft.qty||'')}">
           <label>Birim fiyatı (₺)</label>
-          <input name="unitPrice" type="number" step="0.01" min="0" required value="${editing?editing.unitPrice:''}">
+          <input name="unitPrice" type="number" step="0.01" min="0" required value="${editing?editing.unitPrice:escapeHtml(bDraft.unitPrice||'')}">
           <div class="btn-row">
             <button type="submit" class="btn btn-primary">${editing?'Güncelle':'Kaydet'}</button>
-            ${editing?'<button type="button" class="btn btn-ghost" data-cancel-bonus>Vazgeç</button>':''}
+            ${editing?'<button type="button" class="btn btn-ghost" data-cancel-bonus>Vazgeç</button>':'<button type="button" class="btn btn-ghost" data-clear-bonus>Temizle</button>'}
           </div>
         </form>`}
       </div>
@@ -763,7 +1171,15 @@ function renderBonus(){
 // ---------- AYLIK RAPOR ----------
 function renderRapor(){
   const months = Array.from(new Set([...availableMonths(data.invoices), ...availableBonusPeriods(), currentMonthKey()])).sort().reverse();
+  // Tüm zamanlar seçiliyken firma seçimi zorunlu: 'all' + 'all' kombinasyonuna izin verme
+  if(ui.reportMonth==='all' && ui.reportCompany==='all' && data.companies.length){
+    ui.reportCompany = data.companies[0].id;
+  }
   const monthOptions = ['all',...months].map(m=>`<option value="${m}" ${ui.reportMonth===m?'selected':''}>${monthLabel(m)}</option>`).join('');
+  const reportAllowAllCompanies = ui.reportMonth!=='all';
+  if(!reportAllowAllCompanies && ui.reportCompany==='all' && data.companies.length){
+    ui.reportCompany = data.companies[0].id;
+  }
 
   let invoices = data.invoices.slice();
   if(ui.reportMonth!=='all') invoices = invoices.filter(i=>monthKey(i.date)===ui.reportMonth);
@@ -775,14 +1191,26 @@ function renderRapor(){
   if(ui.reportCompany!=='all') bonusesInPeriod = bonusesInPeriod.filter(b=>b.companyId===ui.reportCompany);
 
   let totalAmount=0, totalExpected=0;
+  // Fatura tutarı KDV dahil giriliyor. "KDV hariç hesapla" seçiliyse hem Tutar
+  // sütunu/toplamlar hem beklenen MF, KDV düşülmüş matrah üzerinden gösterilir.
+  const vatRateNum = parseFloat(ui.reportVatRate)||0;
+  const vatDivisor = ui.reportExclVat ? (1 + vatRateNum/100) : 1;
+  function netFor(inv){
+    return inv.amount / vatDivisor;
+  }
+  function expectedFor(inv){
+    return netFor(inv) * companyPercent(inv.companyId) / 100;
+  }
+  const tutarColLabel = ui.reportExclVat ? 'Tutar (KDV hariç)' : 'Tutar';
   const invRows = invoices.map(inv=>{
-    const expected = inv.amount * companyPercent(inv.companyId) / 100;
-    totalAmount += inv.amount; totalExpected += expected;
+    const net = netFor(inv);
+    const expected = expectedFor(inv);
+    totalAmount += net; totalExpected += expected;
     return `<tr>
       <td>${fmtDate(inv.date)}</td>
       <td>${escapeHtml(companyName(inv.companyId))}</td>
       <td>${escapeHtml(inv.invoiceNo||'—')}</td>
-      <td class="num">${money(inv.amount)}</td>
+      <td class="num">${money(net)}</td>
       <td class="num">%${companyPercent(inv.companyId)}</td>
       <td class="num">${money(expected)}</td>
     </tr>`;
@@ -790,39 +1218,124 @@ function renderRapor(){
 
   const totalReceived = bonusesInPeriod.reduce((s,b)=>s + b.qty*b.unitPrice, 0);
 
-  // Firma bazlı özet — beklenen faturalardan, alınan ise firma+aya bağlı MF kayıtlarından hesaplanır
-  const byCompany = {};
-  invoices.forEach(inv=>{
-    const expected = inv.amount * companyPercent(inv.companyId) / 100;
-    if(!byCompany[inv.companyId]) byCompany[inv.companyId] = {count:0, amount:0, expected:0, received:0};
-    byCompany[inv.companyId].count++;
-    byCompany[inv.companyId].amount += inv.amount;
-    byCompany[inv.companyId].expected += expected;
-  });
-  bonusesInPeriod.forEach(b=>{
-    if(!byCompany[b.companyId]) byCompany[b.companyId] = {count:0, amount:0, expected:0, received:0};
-    byCompany[b.companyId].received += b.qty*b.unitPrice;
-  });
-  const companyRows = Object.keys(byCompany).length ? Object.entries(byCompany).map(([cid,v])=>{
-    const fark = v.received - v.expected;
-    let badge;
-    if(Math.abs(fark) < 0.01) badge = '<span class="badge badge-ok">Tam</span>';
-    else if(fark < 0) badge = '<span class="badge badge-deficit">Eksik</span>';
-    else badge = '<span class="badge badge-surplus">Fazla</span>';
-    return `<tr>
-      <td>${escapeHtml(companyName(cid))}</td>
-      <td class="num">${v.count}</td>
-      <td class="num">${money(v.amount)}</td>
-      <td class="num">${money(v.expected)}</td>
-      <td class="num">${money(v.received)}</td>
-      <td class="num">${money(fark)}</td>
-      <td>${badge}</td>
-    </tr>`;
-  }).join('') : `<tr><td colspan="7"><div class="empty">Bu dönemde veri yok.</div></td></tr>`;
+  function badgeFor(expected, received){
+    const fark = received - expected;
+    if(expected===0 && received===0) return '<span class="badge" style="background:#eef1ec;color:var(--ink-soft);">—</span>';
+    if(Math.abs(fark) < 0.01) return '<span class="badge badge-ok">Tam</span>';
+    if(fark < 0) return '<span class="badge badge-deficit">Eksik</span>';
+    return '<span class="badge badge-surplus">Fazla</span>';
+  }
+
+  // Özet tablosu iki modda çalışır:
+  // - Tek firma seçiliyse (özellikle Tüm zamanlar): ay ay ayrı satırlar
+  // - Tüm firmalar (tek ay): firma bazında satırlar, Firmalar sayfası sırasıyla, 0 dahil
+  const isSingleCompany = ui.reportCompany!=='all';
+  let summaryTitle, summaryHead, summaryRowsHtml, summaryFootHtml, summaryHint;
+  if(isSingleCompany){
+    const monthKeys = ui.reportMonth==='all' ? months : [ui.reportMonth];
+    const byMonth = {};
+    monthKeys.forEach(m=>{ byMonth[m] = {count:0, amount:0, expected:0, received:0}; });
+    invoices.forEach(inv=>{
+      const mk = monthKey(inv.date);
+      if(!byMonth[mk]) byMonth[mk] = {count:0, amount:0, expected:0, received:0};
+      const net = netFor(inv);
+      const expected = expectedFor(inv);
+      byMonth[mk].count++;
+      byMonth[mk].amount += net;
+      byMonth[mk].expected += expected;
+    });
+    bonusesInPeriod.forEach(b=>{
+      const mk = bonusPeriod(b);
+      if(!byMonth[mk]) byMonth[mk] = {count:0, amount:0, expected:0, received:0};
+      byMonth[mk].received += b.qty*b.unitPrice;
+    });
+    summaryTitle = 'Ay bazında özet — ' + companyName(ui.reportCompany);
+    summaryHead = '<tr><th>Ay</th><th style="text-align:right">Fatura</th><th style="text-align:right">' + tutarColLabel + '</th><th style="text-align:right">Beklenen</th><th style="text-align:right">Alınan</th><th style="text-align:right">Fark</th><th>Durum</th></tr>';
+    summaryRowsHtml = monthKeys.map(mk=>{
+      const v = byMonth[mk];
+      const fark = v.received - v.expected;
+      return `<tr>
+        <td class="mono">${escapeHtml(monthLabel(mk))}</td>
+        <td class="num">${v.count}</td>
+        <td class="num">${money(v.amount)}</td>
+        <td class="num">${money(v.expected)}</td>
+        <td class="num">${money(v.received)}</td>
+        <td class="num">${money(fark)}</td>
+        <td>${badgeFor(v.expected, v.received)}</td>
+      </tr>`;
+    }).join('') || `<tr><td colspan="7"><div class="empty">Bu dönemde veri yok.</div></td></tr>`;
+    const totM = Object.values(byMonth).reduce((s,v)=>({count:s.count+v.count, amount:s.amount+v.amount, expected:s.expected+v.expected, received:s.received+v.received}), {count:0, amount:0, expected:0, received:0});
+    const totMfark = totM.received - totM.expected;
+    summaryFootHtml = `<tr class="total-row">
+        <td>TOPLAM</td>
+        <td class="num">${totM.count}</td>
+        <td class="num">${money(totM.amount)}</td>
+        <td class="num">${money(totM.expected)}</td>
+        <td class="num">${money(totM.received)}</td>
+        <td class="num">${money(totMfark)}</td>
+        <td>${badgeFor(totM.expected, totM.received)}</td>
+      </tr>`;
+    summaryHint = 'Seçili firmanın ay ay kırılımıdır. Alınan tutar, o aya kayıtlı tüm MF Ürünler girişlerinin toplamıdır.';
+  } else {
+    // Firma bazlı özet — beklenen faturalardan, alınan ise firma+aya bağlı MF kayıtlarından hesaplanır
+    // Seçili ayda hareketi olmasa da tüm firmalar 0 olarak listelenir
+    const byCompany = {};
+    const visibleCompanyIds = data.companies.map(c=>c.id);
+    visibleCompanyIds.forEach(cid=>{ byCompany[cid] = {count:0, amount:0, expected:0, received:0}; });
+    invoices.forEach(inv=>{
+      const net = netFor(inv);
+      const expected = expectedFor(inv);
+      if(!byCompany[inv.companyId]) byCompany[inv.companyId] = {count:0, amount:0, expected:0, received:0};
+      byCompany[inv.companyId].count++;
+      byCompany[inv.companyId].amount += net;
+      byCompany[inv.companyId].expected += expected;
+    });
+    bonusesInPeriod.forEach(b=>{
+      if(!byCompany[b.companyId]) byCompany[b.companyId] = {count:0, amount:0, expected:0, received:0};
+      byCompany[b.companyId].received += b.qty*b.unitPrice;
+    });
+    const companyOrder = new Map(data.companies.map((c,i)=>[c.id,i]));
+    summaryTitle = 'Firma bazında özet';
+    summaryHead = '<tr><th>Firma</th><th style="text-align:right">Fatura</th><th style="text-align:right">' + tutarColLabel + '</th><th style="text-align:right">Beklenen</th><th style="text-align:right">Alınan</th><th style="text-align:right">Fark</th><th>Durum</th></tr>';
+    summaryRowsHtml = Object.keys(byCompany).length ? Object.entries(byCompany).sort((a,b)=>{
+      const oa = companyOrder.has(a[0]) ? companyOrder.get(a[0]) : 9999;
+      const ob = companyOrder.has(b[0]) ? companyOrder.get(b[0]) : 9999;
+      if(oa!==ob) return oa-ob;
+      return companyName(a[0]).localeCompare(companyName(b[0]),'tr');
+    }).map(([cid,v])=>{
+      const fark = v.received - v.expected;
+      return `<tr>
+        <td>${escapeHtml(companyName(cid))}</td>
+        <td class="num">${v.count}</td>
+        <td class="num">${money(v.amount)}</td>
+        <td class="num">${money(v.expected)}</td>
+        <td class="num">${money(v.received)}</td>
+        <td class="num">${money(fark)}</td>
+        <td>${badgeFor(v.expected, v.received)}</td>
+      </tr>`;
+    }).join('') : `<tr><td colspan="7"><div class="empty">Bu dönemde veri yok.</div></td></tr>`;
+    const totC = Object.values(byCompany).reduce((s,v)=>({count:s.count+v.count, amount:s.amount+v.amount, expected:s.expected+v.expected, received:s.received+v.received}), {count:0, amount:0, expected:0, received:0});
+    const totCfark = totC.received - totC.expected;
+    summaryFootHtml = `<tr class="total-row">
+        <td>TOPLAM</td>
+        <td class="num">${totC.count}</td>
+        <td class="num">${money(totC.amount)}</td>
+        <td class="num">${money(totC.expected)}</td>
+        <td class="num">${money(totC.received)}</td>
+        <td class="num">${money(totCfark)}</td>
+        <td>${badgeFor(totC.expected, totC.received)}</td>
+      </tr>`;
+    summaryHint = 'Alınan tutar, o firmaya ait ve seçilen aya kayıtlı tüm MF Ürünler girişlerinin toplamıdır — belirli bir faturaya değil, firma + aya bağlıdır.';
+  }
+
+
+  if(ui.reportExclVat) summaryHint += ' Tutar ve Beklenen sütunları, KDV %' + (parseFloat(ui.reportVatRate)||0) + ' düşülmüş matrah üzerinden gösterilmiştir.';
+
 
   const totalFark = totalReceived - totalExpected;
 
   const reportCompanyLabel = ui.reportCompany==='all' ? 'Tüm firmalar' : companyName(ui.reportCompany);
+  const vatModeLabel = ui.reportExclVat ? ('KDV hariç (KDV %' + (parseFloat(ui.reportVatRate)||0) + ')') : 'KDV dahil';
   const printedAt = new Date();
   const printedAtStr = fmtDate(printedAt.toISOString().slice(0,10)) + ' ' + printedAt.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
 
@@ -834,8 +1347,15 @@ function renderRapor(){
         <select class="month-select" data-filter="reportMonth">${monthOptions}</select>
       </div>
       <div class="field">
-        <label>Firma</label>
-        <select data-filter="reportCompany">${companyFilterOptions(ui.reportCompany)}</select>
+        <label>Firma${ui.reportMonth==='all'?' *':''}</label>
+        <select data-filter="reportCompany" ${ui.reportMonth==='all'?'required':''}>${companyFilterOptions(ui.reportCompany, reportAllowAllCompanies)}</select>
+      </div>
+      <div class="field">
+        <label class="toggle-check" style="margin:0;color:#c9d3cd;white-space:nowrap;">
+          <input type="checkbox" data-filter="reportExclVat" ${ui.reportExclVat?'checked':''} style="accent-color:#c1622b;">
+          KDV hariç hesapla
+        </label>
+        ${ui.reportExclVat?`<span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#c9d3cd;white-space:nowrap;">KDV %<input data-filter="reportVatRate" type="number" step="0.01" min="0" max="100" value="${escapeHtml(ui.reportVatRate)}" style="width:64px;padding:7px 8px;"></span>`:''}
       </div>
       <button class="btn btn-ghost-inv" data-print-report>🖨️ Yazdır</button>
     </div>
@@ -853,25 +1373,27 @@ function renderRapor(){
       <div style="font-size:12px;margin-top:6px;">
         Dönem: ${escapeHtml(monthLabel(ui.reportMonth))} &nbsp;|&nbsp;
         Firma: ${escapeHtml(reportCompanyLabel)} &nbsp;|&nbsp;
+        Hesap: ${escapeHtml(vatModeLabel)} &nbsp;|&nbsp;
         Çıktı tarihi: ${printedAtStr}
       </div>
-      <div style="border-bottom:2px solid #1c3b34;margin-top:10px"></div>
+      <div style="border-bottom:2px solid #1d3a5f;margin-top:10px"></div>
     </div>
 
     <div class="summary-row">
-      <div class="stat"><div class="label">Toplam fatura tutarı</div><div class="value">${money(totalAmount)}</div></div>
-      <div class="stat"><div class="label">Beklenen mal fazlası</div><div class="value">${money(totalExpected)}</div></div>
+      <div class="stat"><div class="label">Toplam fatura tutarı${ui.reportExclVat?' (KDV hariç)':' (KDV dahil)'}</div><div class="value">${money(totalAmount)}</div></div>
+      <div class="stat"><div class="label">Beklenen mal fazlası${ui.reportExclVat?' (KDV hariç)':''}</div><div class="value">${money(totalExpected)}</div></div>
       <div class="stat accent"><div class="label">Alınan mal fazlası</div><div class="value">${money(totalReceived)}</div></div>
       <div class="stat ${totalFark<0?'deficit':''}"><div class="label">Fark</div><div class="value">${money(totalFark)}</div></div>
     </div>
 
-    <div class="section-title">Firma bazında özet</div>
+    <div class="section-title">${escapeHtml(summaryTitle)}</div>
     <div class="card">
       <table class="table-grid">
-        <thead><tr><th>Firma</th><th style="text-align:right">Fatura</th><th style="text-align:right">Tutar</th><th style="text-align:right">Beklenen</th><th style="text-align:right">Alınan</th><th style="text-align:right">Fark</th><th>Durum</th></tr></thead>
-        <tbody>${companyRows}</tbody>
+        <thead>${summaryHead}</thead>
+        <tbody>${summaryRowsHtml}</tbody>
+        <tfoot>${summaryFootHtml}</tfoot>
       </table>
-      <p class="hint no-print">Alınan tutar, o firmaya ait ve seçilen aya kayıtlı tüm MF Ürünler girişlerinin toplamıdır — belirli bir faturaya değil, firma + aya bağlıdır.</p>
+      <p class="hint no-print">${escapeHtml(summaryHint)}</p>
     </div>
 
     <div class="section-title-row">
@@ -884,7 +1406,7 @@ function renderRapor(){
     ${ui.showInvoiceDetail ? `
     <div class="card">
       <table>
-        <thead><tr><th>Tarih</th><th>Firma</th><th>Fatura No</th><th style="text-align:right">Tutar</th><th style="text-align:right">Oran</th><th style="text-align:right">Beklenen</th></tr></thead>
+        <thead><tr><th>Tarih</th><th>Firma</th><th>Fatura No</th><th style="text-align:right">${tutarColLabel}</th><th style="text-align:right">Oran</th><th style="text-align:right">Beklenen</th></tr></thead>
         <tbody>${invRows || '<tr><td colspan="6"><div class="empty">Bu dönemde fatura yok.</div></td></tr>'}</tbody>
       </table>
     </div>
@@ -917,6 +1439,15 @@ function renderVeri(){
       <input type="file" id="importFileInput" accept="application/json" style="display:none">
       <p class="hint">İçe aktarma, mevcut tüm verilerin yerine seçtiğiniz dosyadaki verileri yazar.</p>
     </div>
+    <div class="card" style="max-width:640px;margin-top:16px">
+      <h2>Veritabanına yedekle (tarihli)</h2>
+      <p class="hint" style="margin-top:0;">Bulut veritabanında tarih isimli bir yedek kopya oluşturur. Siteyi GitHub'a yükleseniz de yedekler hesapta durur, istediğiniz tarihe geri dönebilirsiniz.</p>
+      <div class="btn-row">
+        <button class="btn btn-primary" data-backup-cloud>☁️ Veritabanına yedekle</button>
+      </div>
+      <div id="backupStatus" class="hint"></div>
+      <div id="backupList" style="margin-top:10px;"></div>
+    </div>
   `;
 }
 
@@ -946,10 +1477,34 @@ function attachHandlers(){
   if(bonusCompanyFilter) bonusCompanyFilter.addEventListener('change', e=>{ ui.bonusCompanyFilter = e.target.value; render(); });
 
   const reportFilter = app.querySelector('[data-filter="reportMonth"]');
-  if(reportFilter) reportFilter.addEventListener('change', e=>{ ui.reportMonth = e.target.value; render(); });
+  if(reportFilter) reportFilter.addEventListener('change', e=>{
+    ui.reportMonth = e.target.value;
+    // Tüm zamanlar seçilince firma zorunlu: Tüm firmalar'da kalınırsa ilk firmaya geç
+    if(ui.reportMonth==='all' && ui.reportCompany==='all' && data.companies.length){
+      ui.reportCompany = data.companies[0].id;
+    }
+    render();
+  });
 
   const reportCompanyFilter = app.querySelector('[data-filter="reportCompany"]');
-  if(reportCompanyFilter) reportCompanyFilter.addEventListener('change', e=>{ ui.reportCompany = e.target.value; render(); });
+  if(reportCompanyFilter) reportCompanyFilter.addEventListener('change', e=>{
+    // Tüm zamanlar modunda 'Tüm firmalar' seçimine izin verme
+    if(ui.reportMonth==='all' && e.target.value==='all'){
+      if(data.companies.length) ui.reportCompany = data.companies[0].id;
+      render();
+      return;
+    }
+    ui.reportCompany = e.target.value; render();
+  });
+
+  const reportExclVatFilter = app.querySelector('[data-filter="reportExclVat"]');
+  if(reportExclVatFilter) reportExclVatFilter.addEventListener('change', e=>{ ui.reportExclVat = e.target.checked; render(); });
+
+  const reportVatRateFilter = app.querySelector('[data-filter="reportVatRate"]');
+  if(reportVatRateFilter){
+    reportVatRateFilter.addEventListener('change', e=>{ ui.reportVatRate = e.target.value; render(); });
+    reportVatRateFilter.addEventListener('input', e=>{ ui.reportVatRate = e.target.value; });
+  }
 
   const printBtn = app.querySelector('[data-print-report]');
   if(printBtn) printBtn.addEventListener('click', ()=> window.print());
@@ -966,6 +1521,10 @@ function attachHandlers(){
   if(importTriggerBtn) importTriggerBtn.addEventListener('click', triggerImport);
   const importInput = app.querySelector('#importFileInput');
   if(importInput) importInput.addEventListener('change', handleImportFile);
+
+  const backupBtn = app.querySelector('[data-backup-cloud]');
+  if(backupBtn) backupBtn.addEventListener('click', cloudBackup);
+  if(ui.tab==='veri') loadBackupList();
 
   // Company form
   const companyForm = app.querySelector('[data-form="company"]');
@@ -985,18 +1544,38 @@ function attachHandlers(){
     saveData(); render();
   });
   app.querySelectorAll('[data-edit-company]').forEach(b=>b.addEventListener('click',()=>{ ui.editCompanyId = b.dataset.editCompany; render(); }));
-  app.querySelectorAll('[data-del-company]').forEach(b=>b.addEventListener('click',()=>{
-    if(confirm('Bu firmayı silmek istediğinize emin misiniz? Bağlı faturalar etkilenmez ama firma adı görünmez olur.')){
-      data.companies = data.companies.filter(c=>c.id!==b.dataset.delCompany);
-      saveData(); render();
-    }
+  app.querySelectorAll('[data-del-company]').forEach(b=>b.addEventListener('click', async ()=>{
+    const ok = await modalConfirm('Firmayı sil', 'Bu firmayı silmek istediğinize emin misiniz? Bağlı faturalar etkilenmez ama firma adı görünmez olur.', 'Sil');
+    if(!ok) return;
+    const pw = await modalPrompt('Yönetici şifresi', 'Silmek için yönetici şifresini girin:', 'password');
+    if(pw===null) return;
+    if(pw!=='5464'){ modalAlert('Hatalı şifre', 'Yönetici şifresi hatalı. Firma silinmedi.'); return; }
+    data.companies = data.companies.filter(c=>c.id!==b.dataset.delCompany);
+    saveData(); render();
   }));
   const cancelCompany = app.querySelector('[data-cancel-company]');
   if(cancelCompany) cancelCompany.addEventListener('click', ()=>{ ui.editCompanyId=null; render(); });
 
   // Invoice form
   const invoiceForm = app.querySelector('[data-form="invoice"]');
-  if(invoiceForm) invoiceForm.addEventListener('submit', e=>{
+  if(invoiceForm){
+    const isEditingInvoice = !!(invoiceForm.querySelector('input[name="id"]')||{}).value;
+    // Yeni kayıtta yazdıklar render'da kaybolmasın diye taslağı güncel tut
+    invoiceForm.querySelectorAll('input[name="invoiceNo"],input[name="date"],input[name="amount"]').forEach(inp=>{
+      inp.addEventListener('input', ()=>{
+        if(isEditingInvoice) return;
+        ui.invoiceDraft[inp.name] = inp.value;
+      });
+    });
+    const invCompanySel = invoiceForm.querySelector('select[name="companyId"]');
+    if(invCompanySel) invCompanySel.addEventListener('change', e=>{
+      if(isEditingInvoice) return;
+      ui.invoiceDraft.companyId = e.target.value;
+      // Formda firma seçilince liste de hemen o firmaya filtrelensin
+      ui.invoiceCompanyFilter = e.target.value || 'all';
+      render();
+    });
+    invoiceForm.addEventListener('submit', e=>{
     e.preventDefault();
     const fd = new FormData(invoiceForm);
     const id = fd.get('id');
@@ -1010,25 +1589,49 @@ function attachHandlers(){
       Object.assign(data.invoices.find(i=>i.id===id), payload);
     } else {
       data.invoices.push({id:uid(), ...payload});
+      ui.invoiceDraft = {companyId:payload.companyId||'', invoiceNo:'', date:payload.date||'', amount:''};
+      ui.invoiceCompanyFilter = payload.companyId || 'all';
     }
     ui.editInvoiceId = null;
     saveData(); render();
-  });
+    });
+  }
   app.querySelectorAll('[data-edit-invoice]').forEach(b=>b.addEventListener('click',()=>{ ui.editInvoiceId = b.dataset.editInvoice; render(); }));
-  app.querySelectorAll('[data-del-invoice]').forEach(b=>b.addEventListener('click',()=>{
-    if(confirm('Bu faturayı silmek istediğinize emin misiniz?')){
-      const id = b.dataset.delInvoice;
-      data.invoices = data.invoices.filter(i=>i.id!==id);
-      data.bonuses = data.bonuses.filter(bn=>bn.invoiceId!==id);
-      saveData(); render();
-    }
+  app.querySelectorAll('[data-del-invoice]').forEach(b=>b.addEventListener('click', async ()=>{
+    const ok = await modalConfirm('Faturayı sil', 'Bu faturayı silmek istediğinize emin misiniz?', 'Sil');
+    if(!ok) return;
+    const id = b.dataset.delInvoice;
+    data.invoices = data.invoices.filter(i=>i.id!==id);
+    data.bonuses = data.bonuses.filter(bn=>bn.invoiceId!==id);
+    saveData(); render();
   }));
   const cancelInvoice = app.querySelector('[data-cancel-invoice]');
   if(cancelInvoice) cancelInvoice.addEventListener('click', ()=>{ ui.editInvoiceId=null; render(); });
+  const clearInvoice = app.querySelector('[data-clear-invoice]');
+  if(clearInvoice) clearInvoice.addEventListener('click', ()=>{
+    ui.invoiceDraft = {companyId:'', invoiceNo:'', date:'', amount:''};
+    ui.invoiceCompanyFilter = 'all';
+    render();
+  });
 
   // Bonus form
   const bonusForm = app.querySelector('[data-form="bonus"]');
-  if(bonusForm) bonusForm.addEventListener('submit', e=>{
+  if(bonusForm){
+    const isEditingBonus = !!(bonusForm.querySelector('input[name="id"]')||{}).value;
+    bonusForm.querySelectorAll('input[name="period"],input[name="date"],input[name="barcode"],input[name="name"],input[name="qty"],input[name="unitPrice"]').forEach(inp=>{
+      inp.addEventListener('input', ()=>{
+        if(isEditingBonus) return;
+        ui.bonusDraft[inp.name] = inp.value;
+      });
+    });
+    const bnCompanySel = bonusForm.querySelector('select[name="companyId"]');
+    if(bnCompanySel) bnCompanySel.addEventListener('change', e=>{
+      if(isEditingBonus) return;
+      ui.bonusDraft.companyId = e.target.value;
+      ui.bonusCompanyFilter = e.target.value || 'all';
+      render();
+    });
+    bonusForm.addEventListener('submit', e=>{
     e.preventDefault();
     const fd = new FormData(bonusForm);
     const id = fd.get('id');
@@ -1045,19 +1648,28 @@ function attachHandlers(){
       Object.assign(data.bonuses.find(b=>b.id===id), payload);
     } else {
       data.bonuses.push({id:uid(), ...payload});
+      ui.bonusDraft = {companyId:payload.companyId||'', period:payload.period||'', date:payload.date||'', barcode:'', name:'', qty:'', unitPrice:''};
+      ui.bonusCompanyFilter = payload.companyId || 'all';
     }
     ui.editBonusId = null;
     saveData(); render();
-  });
+    });
+  }
   app.querySelectorAll('[data-edit-bonus]').forEach(b=>b.addEventListener('click',()=>{ ui.editBonusId = b.dataset.editBonus; render(); }));
-  app.querySelectorAll('[data-del-bonus]').forEach(b=>b.addEventListener('click',()=>{
-    if(confirm('Bu mal fazlası kaydını silmek istediğinize emin misiniz?')){
-      data.bonuses = data.bonuses.filter(bn=>bn.id!==b.dataset.delBonus);
-      saveData(); render();
-    }
+  app.querySelectorAll('[data-del-bonus]').forEach(b=>b.addEventListener('click', async ()=>{
+    const ok = await modalConfirm('Kaydı sil', 'Bu mal fazlası kaydını silmek istediğinize emin misiniz?', 'Sil');
+    if(!ok) return;
+    data.bonuses = data.bonuses.filter(bn=>bn.id!==b.dataset.delBonus);
+    saveData(); render();
   }));
   const cancelBonus = app.querySelector('[data-cancel-bonus]');
   if(cancelBonus) cancelBonus.addEventListener('click', ()=>{ ui.editBonusId=null; render(); });
+  const clearBonus = app.querySelector('[data-clear-bonus]');
+  if(clearBonus) clearBonus.addEventListener('click', ()=>{
+    ui.bonusDraft = {companyId:'', period:'', date:'', barcode:'', name:'', qty:'', unitPrice:''};
+    ui.bonusCompanyFilter = 'all';
+    render();
+  });
 }
 
 loadData();

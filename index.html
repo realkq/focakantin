@@ -647,7 +647,7 @@ let ui = {
   reportVatRate: 20,
   showInvoiceDetail: false,
   invoiceDraft: {companyId:'', invoiceNo:'', date:'', amount:''},
-  bonusDraft: {companyId:'', period:'', date:'', barcode:'', name:'', qty:'', unitPrice:''}
+  bonusDraft: {companyId:'', period:'', date:'', barcode:'', name:'', qty:'', unit:'adet', unitPrice:''}
 };
 
 const STORAGE_KEY = 'isletme-mal-fazlasi-v1';
@@ -922,6 +922,20 @@ function availableBonusPeriods(){
   const set = new Set(data.bonuses.map(b=>bonusPeriod(b)).filter(Boolean));
   return Array.from(set).sort().reverse();
 }
+function bonusUnit(b){
+  // Eski kayıtlarda "unit" alanı yoksa varsayılan adet kabul et.
+  return (b && b.unit)==='kg' ? 'kg' : 'adet';
+}
+function fmtQty(b){
+  const q = Number(b.qty)||0;
+  if(bonusUnit(b)==='kg'){
+    return q.toLocaleString('tr-TR', {minimumFractionDigits:0, maximumFractionDigits:3}) + ' kg';
+  }
+  return (Number.isInteger(q) ? String(q) : q.toLocaleString('tr-TR', {minimumFractionDigits:0, maximumFractionDigits:3})) + ' Adet';
+}
+function bonusTotal(b){
+  return (Number(b.qty)||0) * (Number(b.unitPrice)||0);
+}
 function companyFilterOptions(selected, allowAll=true){
   const opts = [...(allowAll?['all']:[]), ...data.companies.map(c=>c.id)];
   // allowAll=false iken selected 'all' kalırsa ilk firmaya düş
@@ -1116,9 +1130,9 @@ function renderBonus(){
       <td>${escapeHtml(companyName(b.companyId))}</td>
       <td class="mono">${escapeHtml(b.barcode||'—')}</td>
       <td>${escapeHtml(b.name)}</td>
-      <td class="num">${b.qty}</td>
+      <td class="num">${fmtQty(b)}</td>
       <td class="num">${money(b.unitPrice)}</td>
-      <td class="num">${money(b.qty*b.unitPrice)}</td>
+      <td class="num">${money(bonusTotal(b))}</td>
       <td><div class="row-actions">
         <button class="icon-btn" data-edit-bonus="${b.id}">Düzenle</button>
         <button class="icon-btn danger" data-del-bonus="${b.id}">Sil</button>
@@ -1126,7 +1140,7 @@ function renderBonus(){
     </tr>`;
   }).join('') : `<tr><td colspan="9"><div class="empty">Bu döneme ait mal fazlası kaydı yok.</div></td></tr>`;
 
-  const bDraft = ui.bonusDraft || {companyId:'', period:'', date:'', barcode:'', name:'', qty:'', unitPrice:''};
+  const bDraft = ui.bonusDraft || {companyId:'', period:'', date:'', barcode:'', name:'', qty:'', unit:'adet', unitPrice:''};
   const bonusCompanyOptions = data.companies.map(c=>
     `<option value="${c.id}" ${(editing&&editing.companyId===c.id)||(!editing&&bDraft.companyId===c.id)?'selected':''}>${escapeHtml(c.name)} (%${c.percent})</option>`
   ).join('');
@@ -1135,7 +1149,7 @@ function renderBonus(){
     <div class="page-head">
       <div>
         <h1>MF Ürünler</h1>
-        <p>Firmadan teslim alınan mal fazlası ürünleri barkot, ad, adet ve birim fiyatıyla kaydedin. Kayıtlar faturaya değil, firma ve döneme (aya) bağlıdır — firma mal fazlasını tek seferde, ay bitince toplu getirse de sorun olmaz.</p>
+        <p>Firmadan teslim alınan mal fazlası ürünleri barkot, ad, miktar (adet ya da kg) ve birim fiyatıyla kaydedin. Kayıtlar faturaya değil, firma ve döneme (aya) bağlıdır — firma mal fazlasını tek seferde, ay bitince toplu getirse de sorun olmaz.</p>
       </div>
     </div>
     <div class="grid-2">
@@ -1158,10 +1172,21 @@ function renderBonus(){
           <input name="barcode" placeholder="Örn. 8690123456789" value="${editing?escapeHtml(editing.barcode||''):escapeHtml(bDraft.barcode||'')}">
           <label>Ürün adı</label>
           <input name="name" required placeholder="Örn. 1 Lt Ayçiçek Yağı" value="${editing?escapeHtml(editing.name):escapeHtml(bDraft.name||'')}">
-          <label>Adet</label>
-          <input name="qty" type="number" step="1" min="1" required value="${editing?editing.qty:escapeHtml(bDraft.qty||'')}">
-          <label>Birim fiyatı (₺)</label>
-          <input name="unitPrice" type="number" step="0.01" min="0" required value="${editing?editing.unitPrice:escapeHtml(bDraft.unitPrice||'')}">
+          <div style="display:flex;gap:8px;">
+            <div style="flex:1;min-width:0;">
+              <label>Miktar <span data-qty-hint style="font-weight:400;">${(editing?bonusUnit(editing):(bDraft.unit||'adet'))==='kg'?' (kg, virgüllü girebilirsiniz)':' (adet)'}</span></label>
+              <input name="qty" type="number" step="0.001" min="0.001" required placeholder="${(editing?bonusUnit(editing):(bDraft.unit||'adet'))==='kg'?'Örn. 2,5':'Örn. 12'}" value="${editing?editing.qty:escapeHtml(bDraft.qty||'')}">
+            </div>
+            <div style="width:110px;flex-shrink:0;">
+              <label>Birim</label>
+              <select name="unit" required>
+                <option value="adet" ${(editing?bonusUnit(editing):(bDraft.unit||'adet'))==='adet'?'selected':''}>Adet</option>
+                <option value="kg" ${(editing?bonusUnit(editing):(bDraft.unit||'adet'))==='kg'?'selected':''}>Kg</option>
+              </select>
+            </div>
+          </div>
+          <label data-price-label>${(editing?bonusUnit(editing):(bDraft.unit||'adet'))==='kg'?'Kilogram fiyatı (₺/kg)':'Birim fiyatı (₺/adet)'}</label>
+          <input name="unitPrice" type="number" step="0.01" min="0" required placeholder="${(editing?bonusUnit(editing):(bDraft.unit||'adet'))==='kg'?'Örn. 450,00':'Örn. 120,00'}" value="${editing?editing.unitPrice:escapeHtml(bDraft.unitPrice||'')}">
           <div class="btn-row">
             <button type="submit" class="btn btn-primary">${editing?'Güncelle':'Kaydet'}</button>
             ${editing?'<button type="button" class="btn btn-ghost" data-cancel-bonus>Vazgeç</button>':'<button type="button" class="btn btn-ghost" data-clear-bonus>Temizle</button>'}
@@ -1177,7 +1202,7 @@ function renderBonus(){
           </div>
         </div>
         <table>
-          <thead><tr><th>Ait olduğu ay</th><th>Teslim tarihi</th><th>Firma</th><th>Barkod</th><th>Ürün</th><th style="text-align:right">Adet</th><th style="text-align:right">B.Fiyat</th><th style="text-align:right">Tutar</th><th></th></tr></thead>
+          <thead><tr><th>Ait olduğu ay</th><th>Teslim tarihi</th><th>Firma</th><th>Barkod</th><th>Ürün</th><th style="text-align:right">Miktar</th><th style="text-align:right">B.Fiyat</th><th style="text-align:right">Tutar</th><th></th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       </div>
@@ -1233,7 +1258,7 @@ function renderRapor(){
     </tr>`;
   }).join('');
 
-  const totalReceived = bonusesInPeriod.reduce((s,b)=>s + b.qty*b.unitPrice, 0);
+  const totalReceived = bonusesInPeriod.reduce((s,b)=>s + bonusTotal(b), 0);
 
   function badgeFor(expected, received){
     const fark = received - expected;
@@ -1264,7 +1289,7 @@ function renderRapor(){
     bonusesInPeriod.forEach(b=>{
       const mk = bonusPeriod(b);
       if(!byMonth[mk]) byMonth[mk] = {count:0, amount:0, expected:0, received:0};
-      byMonth[mk].received += b.qty*b.unitPrice;
+      byMonth[mk].received += bonusTotal(b);
     });
     summaryTitle = 'Ay bazında özet — ' + companyName(ui.reportCompany);
     summaryHead = '<tr><th>Ay</th><th style="text-align:right">Fatura</th><th style="text-align:right">' + tutarColLabel + '</th><th style="text-align:right">Beklenen</th><th style="text-align:right">Alınan</th><th style="text-align:right">Fark</th><th>Durum</th></tr>';
@@ -1309,7 +1334,7 @@ function renderRapor(){
     });
     bonusesInPeriod.forEach(b=>{
       if(!byCompany[b.companyId]) byCompany[b.companyId] = {count:0, amount:0, expected:0, received:0};
-      byCompany[b.companyId].received += b.qty*b.unitPrice;
+      byCompany[b.companyId].received += bonusTotal(b);
     });
     const companyOrder = new Map(data.companies.map((c,i)=>[c.id,i]));
     summaryTitle = 'Firma bazında özet';
@@ -1653,6 +1678,31 @@ function attachHandlers(){
         ui.bonusDraft[inp.name] = inp.value;
       });
     });
+    const bnUnitSel = bonusForm.querySelector('select[name="unit"]');
+    const bnQtyInput = bonusForm.querySelector('input[name="qty"]');
+    const bnQtyHint = bonusForm.querySelector('[data-qty-hint]');
+    const bnPriceLabel = bonusForm.querySelector('[data-price-label]');
+    function refreshUnitLabels(){
+      if(!bnUnitSel) return;
+      const isKg = bnUnitSel.value==='kg';
+      if(bnQtyHint) bnQtyHint.textContent = isKg ? ' (kg, virgüllü girebilirsiniz)' : ' (adet)';
+      if(bnQtyInput){
+        bnQtyInput.placeholder = isKg ? 'Örn. 2,5' : 'Örn. 12';
+        bnQtyInput.step = '0.001';
+        bnQtyInput.min = '0.001';
+      }
+      if(bnPriceLabel) bnPriceLabel.textContent = isKg ? 'Kilogram fiyatı (₺/kg)' : 'Birim fiyatı (₺/adet)';
+    }
+    if(bnUnitSel){
+      if(!isEditingBonus && !ui.bonusDraft.unit) ui.bonusDraft.unit = bnUnitSel.value || 'adet';
+      bnUnitSel.addEventListener('change', e=>{
+        if(!isEditingBonus){
+          ui.bonusDraft.unit = e.target.value;
+        }
+        refreshUnitLabels();
+      });
+      refreshUnitLabels();
+    }
     const bnCompanySel = bonusForm.querySelector('select[name="companyId"]');
     if(bnCompanySel) bnCompanySel.addEventListener('change', e=>{
       if(isEditingBonus) return;
@@ -1664,20 +1714,33 @@ function attachHandlers(){
     e.preventDefault();
     const fd = new FormData(bonusForm);
     const id = fd.get('id');
+    const toNum = v=>{
+      let s = String(v==null?'':v).trim().replace(/\s/g,'');
+      if(!s) return NaN;
+      if(s.indexOf(',')>=0){ s = s.replace(/\./g,'').replace(',','.'); }
+      return parseFloat(s);
+    };
+    // Not: "2,5" -> 2.5 ; "1.250,75" gibi binlik ayraçlı giriş de desteklenir
+    const qty = toNum(fd.get('qty'));
+    const unitPrice = toNum(fd.get('unitPrice'));
+    const unit = fd.get('unit')==='kg' ? 'kg' : 'adet';
+    if(!(qty>0)){ modalAlert('Geçersiz miktar', 'Miktar 0\u2019dan büyük olmalı. Kg ürünlerde virgüllü girebilirsiniz (örn. 2,5).'); return; }
+    if(!(unitPrice>=0 && isFinite(unitPrice))){ modalAlert('Geçersiz fiyat', 'Birim fiyatı 0 veya daha büyük olmalı.'); return; }
     const payload = {
       companyId: fd.get('companyId'),
       period: fd.get('period'),
       date: fd.get('date'),
-      barcode: fd.get('barcode').trim(),
-      name: fd.get('name').trim(),
-      qty: parseFloat(fd.get('qty')),
-      unitPrice: parseFloat(fd.get('unitPrice'))
+      barcode: (fd.get('barcode')||'').trim(),
+      name: (fd.get('name')||'').trim(),
+      qty: qty,
+      unit: unit,
+      unitPrice: unitPrice
     };
     if(id){
       Object.assign(data.bonuses.find(b=>b.id===id), payload);
     } else {
       data.bonuses.push({id:uid(), ...payload});
-      ui.bonusDraft = {companyId:payload.companyId||'', period:payload.period||'', date:payload.date||'', barcode:'', name:'', qty:'', unitPrice:''};
+      ui.bonusDraft = {companyId:payload.companyId||'', period:payload.period||'', date:payload.date||'', barcode:'', name:'', qty:'', unit:payload.unit||'adet', unitPrice:''};
       ui.bonusCompanyFilter = payload.companyId || 'all';
     }
     ui.editBonusId = null;
@@ -1695,7 +1758,7 @@ function attachHandlers(){
   if(cancelBonus) cancelBonus.addEventListener('click', ()=>{ ui.editBonusId=null; render(); });
   const clearBonus = app.querySelector('[data-clear-bonus]');
   if(clearBonus) clearBonus.addEventListener('click', ()=>{
-    ui.bonusDraft = {companyId:'', period:'', date:'', barcode:'', name:'', qty:'', unitPrice:''};
+    ui.bonusDraft = {companyId:'', period:'', date:'', barcode:'', name:'', qty:'', unit:'adet', unitPrice:''};
     ui.bonusCompanyFilter = 'all';
     render();
   });
